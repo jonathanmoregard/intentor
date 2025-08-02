@@ -1,5 +1,5 @@
-import { storage } from '../components/storage';
 import browser from 'webextension-polyfill';
+import { storage } from '../components/storage';
 
 import { parse } from 'tldts';
 
@@ -10,6 +10,7 @@ const getDomain = (input: string): string => {
 
 const allowList = new Map<number, string>(); // tabId → base domain
 
+// @ts-ignore
 export default defineBackground(() => {
   browser.webNavigation.onBeforeNavigate.addListener(async details => {
     if (details.frameId !== 0) return;
