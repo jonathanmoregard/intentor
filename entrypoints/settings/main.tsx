@@ -1,11 +1,11 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Rule, storage } from '../../components/storage';
+import { Intention, storage } from '../../components/storage';
 
 type Tab = 'settings' | 'about';
 
 const SettingsTab = memo(() => {
-  const [rules, setRules] = useState<Rule[]>([]);
+  const [intentions, setIntentions] = useState<Intention[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{
     show: boolean;
     index: number | null;
@@ -15,78 +15,87 @@ const SettingsTab = memo(() => {
   });
   const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const isRuleEmpty = useCallback((rule: Rule) => {
-    return rule.url.trim() === '';
+  const isIntentionEmpty = useCallback((intention: Intention) => {
+    return intention.url.trim() === '';
   }, []);
 
-  const focusNewRuleUrl = useCallback((ruleIndex: number) => {
+  const focusNewIntentionUrl = useCallback((intentionIndex: number) => {
     // Small delay to ensure DOM is updated
     setTimeout(() => {
-      urlInputRefs.current[ruleIndex]?.focus();
+      urlInputRefs.current[intentionIndex]?.focus();
     }, 50);
   }, []);
 
-  const saveRules = useCallback(
-    (rulesToSave: Rule[]) => {
-      // Remove empty rules before saving
-      const cleanRules = rulesToSave.filter(rule => !isRuleEmpty(rule));
-      storage.set({ rules: cleanRules });
+  const saveIntentions = useCallback(
+    (intentionsToSave: Intention[]) => {
+      // Remove empty intentions before saving
+      const cleanIntentions = intentionsToSave.filter(
+        intention => !isIntentionEmpty(intention)
+      );
+      storage.set({ intentions: cleanIntentions });
     },
-    [isRuleEmpty]
+    [isIntentionEmpty]
   );
 
   useEffect(() => {
     storage.get().then(data => {
-      const initialRules =
-        data.rules.length > 0 ? data.rules : [{ url: '', phrase: '' }];
-      setRules(initialRules);
+      const initialIntentions =
+        data.intentions.length > 0
+          ? data.intentions
+          : [{ url: '', phrase: '' }];
+      setIntentions(initialIntentions);
     });
   }, []);
 
-  // Save rules whenever they change (except during initial load)
+  // Save intentions whenever they change (except during initial load)
   useEffect(() => {
-    // Don't save during initial load (when rules are empty and we're about to load from storage)
-    if (rules.length > 0) {
-      saveRules(rules);
+    // Don't save during initial load (when intentions are empty and we're about to load from storage)
+    if (intentions.length > 0) {
+      saveIntentions(intentions);
     }
-  }, [rules, saveRules]);
+  }, [intentions, saveIntentions]);
 
   const update = () => {
-    saveRules(rules);
-    // Ensure we always have at least one rule (empty if needed)
-    const cleanRules = rules.filter(rule => !isRuleEmpty(rule));
-    setRules(cleanRules.length > 0 ? cleanRules : [{ url: '', phrase: '' }]);
+    saveIntentions(intentions);
+    // Ensure we always have at least one intention (empty if needed)
+    const cleanIntentions = intentions.filter(
+      intention => !isIntentionEmpty(intention)
+    );
+    setIntentions(
+      cleanIntentions.length > 0 ? cleanIntentions : [{ url: '', phrase: '' }]
+    );
   };
 
-  const addRule = () => {
-    setRules(prev => {
-      const newRules = [...prev, { url: '', phrase: '' }];
-      // Focus the new rule's URL input
-      focusNewRuleUrl(newRules.length - 1);
-      return newRules;
+  const addIntention = () => {
+    setIntentions(prev => {
+      const newIntentions = [...prev, { url: '', phrase: '' }];
+      // Focus the new intention's URL input
+      focusNewIntentionUrl(newIntentions.length - 1);
+      return newIntentions;
     });
   };
 
   const remove = (index: number) => {
-    const rule = rules[index];
-    const hasContent = rule.url.trim() !== '' || rule.phrase.trim() !== '';
+    const intention = intentions[index];
+    const hasContent =
+      intention.url.trim() !== '' || intention.phrase.trim() !== '';
 
-    // Show confirmation dialog for rules with content
+    // Show confirmation dialog for intentions with content
     if (hasContent) {
       setDeleteConfirm({ show: true, index });
       return;
     }
 
-    // Delete empty rules immediately
+    // Delete empty intentions immediately
     performDelete(index);
   };
 
   const performDelete = (index: number) => {
-    const newRules = rules.filter((_, i) => i !== index);
-    // Ensure we always have at least one rule (empty if needed)
-    const finalRules =
-      newRules.length > 0 ? newRules : [{ url: '', phrase: '' }];
-    setRules(finalRules);
+    const newIntentions = intentions.filter((_, i) => i !== index);
+    // Ensure we always have at least one intention (empty if needed)
+    const finalIntentions =
+      newIntentions.length > 0 ? newIntentions : [{ url: '', phrase: '' }];
+    setIntentions(finalIntentions);
   };
 
   const confirmDelete = () => {
@@ -100,66 +109,67 @@ const SettingsTab = memo(() => {
     setDeleteConfirm({ show: false, index: null });
   };
 
-  const handlePhraseBlur = (ruleIndex: number) => {
-    const rule = rules[ruleIndex];
-    const isLastRule = ruleIndex === rules.length - 1;
-    const ruleHasContent = rule.url.trim() !== '' || rule.phrase.trim() !== '';
+  const handlePhraseBlur = (intentionIndex: number) => {
+    const intention = intentions[intentionIndex];
+    const isLastIntention = intentionIndex === intentions.length - 1;
+    const intentionHasContent =
+      intention.url.trim() !== '' || intention.phrase.trim() !== '';
 
-    // If this is the last rule and has content, add a new empty rule
-    if (isLastRule && ruleHasContent) {
-      setRules(prev => {
-        const newRules = [...prev, { url: '', phrase: '' }];
-        // Focus the new rule's URL input
-        focusNewRuleUrl(newRules.length - 1);
-        return newRules;
+    // If this is the last intention and has content, add a new empty intention
+    if (isLastIntention && intentionHasContent) {
+      setIntentions(prev => {
+        const newIntentions = [...prev, { url: '', phrase: '' }];
+        // Focus the new intention's URL input
+        focusNewIntentionUrl(newIntentions.length - 1);
+        return newIntentions;
       });
     }
   };
 
   return (
     <div className='settings-tab'>
-      <h2>Website Rules</h2>
+      <h2>Website Intentions</h2>
       <p className='description'>
         Set up websites where you'd like to pause and reflect before visiting.
         Add the URL pattern and a phrase that helps you remember your intention.
       </p>
 
-      <div className='rules-list'>
-        {rules.map((rule, i) => (
-          <div key={i} className='rule-item'>
-            <div className='rule-inputs'>
+      <div className='intentions-list'>
+        {intentions.map((intention, i) => (
+          <div key={i} className='intention-item'>
+            <div className='intention-inputs'>
               <input
                 ref={el => {
                   urlInputRefs.current[i] = el;
                 }}
                 className='url-input'
                 placeholder='URL pattern (e.g., google.com)'
-                value={rule.url}
+                value={intention.url}
                 onChange={e => {
-                  const copy = [...rules];
+                  const copy = [...intentions];
                   copy[i].url = e.target.value;
-                  setRules(copy);
+                  setIntentions(copy);
                 }}
               />
               <textarea
                 className='phrase-input'
                 placeholder='Phrase to type'
-                value={rule.phrase}
+                value={intention.phrase}
                 maxLength={150}
                 rows={2}
                 onChange={e => {
-                  const copy = [...rules];
+                  const copy = [...intentions];
                   copy[i].phrase = e.target.value;
-                  setRules(copy);
+                  setIntentions(copy);
                 }}
                 onBlur={() => handlePhraseBlur(i)}
               />
             </div>
-            <div className='rule-actions'>
+            <div className='intention-actions'>
               <button
                 className='remove-btn'
                 onClick={() => remove(i)}
-                title='Remove rule'
+                title='Remove intention'
               >
                 ×
               </button>
@@ -171,7 +181,7 @@ const SettingsTab = memo(() => {
       <div className='actions'>
         <button
           className='add-btn'
-          onClick={addRule}
+          onClick={addIntention}
           title='Add another intention'
         >
           Add Intention

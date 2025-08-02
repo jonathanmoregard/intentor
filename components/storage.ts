@@ -5,16 +5,16 @@ declare const __IS_DEV__: boolean;
 const backend = __IS_DEV__ ? browser.storage.local : browser.storage.sync;
 
 export const storage = {
-  async get(): Promise<{ rules: Rule[] }> {
-    const result = await backend.get({ rules: [] });
-    return result as { rules: Rule[] };
+  async get(): Promise<{ intentions: Intention[] }> {
+    const result = await backend.get({ intentions: [] });
+    return result as { intentions: Intention[] };
   },
-  async set(data: { rules: Rule[] }) {
+  async set(data: { intentions: Intention[] }) {
     await backend.set(data);
   },
 };
 
-export type Rule = {
+export type Intention = {
   url: string;
   phrase: string;
 };

@@ -21,8 +21,8 @@ const updateCaretVisibility = () => {
   }
 };
 
-storage.get().then(({ rules }) => {
-  const match = rules.find(r => target?.includes(r.url));
+storage.get().then(({ intentions }) => {
+  const match = intentions.find(r => target?.includes(r.url));
   if (match) {
     expectedPhrase = match.phrase;
     phraseDisplayEl.textContent = expectedPhrase;

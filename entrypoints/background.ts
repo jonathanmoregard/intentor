@@ -23,8 +23,8 @@ export default defineBackground(() => {
       return;
     }
 
-    const { rules } = await storage.get();
-    const match = rules.find(r => details.url.includes(r.url));
+    const { intentions } = await storage.get();
+    const match = intentions.find(r => details.url.includes(r.url));
 
     if (match) {
       console.log('[Intentor] Match found:', match);
