@@ -1,4 +1,36 @@
-import { defineConfig } from 'wxt';
+import { defineConfig } from "wxt";
 
-// See https://wxt.dev/api/config.html
-export default defineConfig({});
+export default defineConfig({
+  vite: ({ mode }) => ({
+    define: {
+      __IS_DEV__: mode === "development",
+    },
+  }),
+  manifest: {
+    name: "Intentor",
+    version: "0.1.0",
+    manifest_version: 3,
+    permissions: ["storage", "webNavigation", "tabs"],
+    host_permissions: ["<all_urls>"],
+    // background: {
+    //   service_worker: "entrypoints/background.ts",
+    //   type: "module",
+    // },
+    options_ui: {
+      page: "entrypoints/options/index.html",
+      open_in_tab: true,
+    },
+    action: {
+      default_popup: "entrypoints/popup/index.html",
+    },
+    icons: {
+      128: "icon/128.png",
+    },
+    web_accessible_resources: [
+      {
+        resources: ["entrypoints/interstitial/index.html"],
+        matches: ["<all_urls>"],
+      },
+    ],
+  },
+});

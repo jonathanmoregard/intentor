@@ -15,7 +15,17 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@types/webextension-polyfill": "^0.12.3",
+    "chrome-types": "^0.1.367",
     "typescript": "^5.8.3",
-    "wxt": "^0.20.6"
+    "wxt": "^0.20.7"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tldts": "^7.0.10",
+    "webextension-polyfill": "^0.12.0"
   }
 }
