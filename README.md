@@ -34,8 +34,20 @@ Intentor is designed to help you be more mindful about your web browsing habits.
   - Red: Incorrect input
 - **Smart Button**: "Enter" button is only enabled when the phrase is complete
 
+## Design Philosophy
+
+Intentor embraces a **mindful, non-coercive approach** to digital wellness. Rather than blocking or punishing users, it creates gentle moments of reflection and intentionality.
+
+### Visual Design
+
+- **Minimalist aesthetic** with clean typography and subtle shadows
+- **Warm, earthy color palette** featuring muted golds and soft grays
+- **Encouraging, not demanding** - Frames reflection as an opportunity rather than a requirement
+- **Mindfulness-focused** - Emphasizes intention-setting and conscious browsing
+- **Non-judgmental** - Avoids shaming or punitive language around web usage
+
 ## Use Cases
 
-- **Productivity**: Add friction to distracting websites like social media
-- **Mindfulness**: Encourage intentional browsing habits
-- **Focus**: Prevent impulsive visits to time-wasting sites
+- **Productivity**: Add gentle friction to distracting websites like social media
+- **Mindfulness**: Encourage intentional browsing habits through reflection
+- **Focus**: Create moments of pause before visiting time-wasting sites
