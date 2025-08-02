@@ -4,7 +4,7 @@
 
 - Cross-platform: mobile, Firefox, Safari, Edge
 - Cross-device sync functionality
-- Interstitial: long phrases, special chars, emojis, accessibility
+- Pause page: long phrases, special chars, emojis, accessibility
 - Settings: mobile, performance, accessibility
 - Extension: install/uninstall, updates, permissions, incognito
 

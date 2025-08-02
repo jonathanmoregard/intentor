@@ -30,7 +30,7 @@ export default defineBackground(() => {
       console.log('[Intentor] Match found:', match);
 
       const redirectUrl = browser.runtime.getURL(
-        'interstitial.html?target=' + encodeURIComponent(details.url)
+        'pause-page.html?target=' + encodeURIComponent(details.url)
       );
 
       allowList.set(details.tabId, getDomain(details.url)); // base domain

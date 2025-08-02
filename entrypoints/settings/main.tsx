@@ -506,7 +506,7 @@ const AboutTab = memo(() => {
         <ol>
           <li>Configure websites and phrases in the Settings tab</li>
           <li>
-            When you visit a configured website, Intentor shows an interstitial
+            When you visit a configured website, Intentor shows a pause page
             page
           </li>
           <li>Type the exact phrase to continue to the website</li>
@@ -516,7 +516,7 @@ const AboutTab = memo(() => {
         <h3>Features</h3>
         <ul>
           <li>Custom phrases for different websites</li>
-          <li>Beautiful, mindful interstitial design</li>
+          <li>Beautiful, mindful pause page design</li>
           <li>Real-time phrase validation</li>
           <li>Simple, distraction-free interface</li>
         </ul>
