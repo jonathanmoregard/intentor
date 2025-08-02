@@ -5,51 +5,74 @@
       @keyframes breathe {
         0% {
           transform: scale(1);
-          opacity: 1;
-        } /* Start with expansion */
-        25% {
-          transform: scale(1.02);
-          opacity: 0.95;
-        } /* Full expansion */
+        }
+        33.33% {
+          transform: scale(1.01);
+        }
         50% {
-          transform: scale(1.02);
-          opacity: 0.95;
-        } /* Pause at full */
-        75% {
+          transform: scale(1.01);
+        }
+        83.33% {
           transform: scale(1);
-          opacity: 1;
-        } /* Contraction */
+        }
         100% {
           transform: scale(1);
-          opacity: 1;
-        } /* Pause at empty */
+        }
       }
 
       @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0px);
-          opacity: 0.01;
+        0%, 100% {
+          transform: translateY(0px) translateX(0px);
+          opacity: 0.03;
+        }
+        25% {
+          transform: translateY(-8px) translateX(4px);
+          opacity: 0.05;
         }
         50% {
-          transform: translateY(-10px);
-          opacity: 0.02;
+          transform: translateY(-12px) translateX(-2px);
+          opacity: 0.04;
+        }
+        75% {
+          transform: translateY(-6px) translateX(6px);
+          opacity: 0.06;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
         }
       }
 
       @keyframes slow-blink {
-        0%,
-        70% {
+        0%, 70% {
           opacity: 1;
         }
-        71%,
-        100% {
+        71%, 100% {
           opacity: 0;
         }
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
         display: flex;
         justify-content: center;
         align-items: center;
@@ -63,7 +86,20 @@
         font-smooth: never;
       }
 
-      /* Dust particles */
+      /* Warm overlay */
+      body::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 248, 220, 0.15), rgba(245, 245, 220, 0.1));
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Ambient particles */
       body::before {
         content: '';
         position: absolute;
@@ -72,147 +108,148 @@
         right: 0;
         bottom: 0;
         background-image:
-          radial-gradient(
-            1px 1px at 20% 30%,
-            rgba(255, 255, 255, 0.1) 50%,
-            transparent 50%
-          ),
-          radial-gradient(
-            1px 1px at 80% 70%,
-            rgba(255, 255, 255, 0.1) 50%,
-            transparent 50%
-          ),
-          radial-gradient(
-            1px 1px at 40% 80%,
-            rgba(255, 255, 255, 0.1) 50%,
-            transparent 50%
-          ),
-          radial-gradient(
-            1px 1px at 60% 20%,
-            rgba(255, 255, 255, 0.1) 50%,
-            transparent 50%
-          );
-        animation: float 8s ease-in-out infinite;
+          radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
+          radial-gradient(1px 1px at 85% 75%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
+          radial-gradient(1px 1px at 35% 85%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
+          radial-gradient(1px 1px at 65% 15%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
+          radial-gradient(1px 1px at 45% 55%, rgba(255, 255, 255, 0.04) 50%, transparent 50%),
+          radial-gradient(1px 1px at 75% 45%, rgba(255, 255, 255, 0.06) 50%, transparent 50%);
+        animation: float 12s ease-in-out infinite;
         pointer-events: none;
+        z-index: 2;
       }
 
       .container {
         text-align: center;
-        background: rgba(255, 255, 255, 0.85);
-        padding: 3rem 2rem;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        max-width: 400px;
+        background: rgba(255, 250, 240, 0.92);
+        padding: 4rem 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        max-width: 405px;
         width: 90%;
-        animation: breathe 16s ease-in-out infinite;
         position: relative;
         z-index: 10;
         display: flex;
+        transition: all 0.6s ease;
+      }
+
+      .container.clicking {
+        transform: scale(0.95);
+        opacity: 0.8;
+      }
+
+      .container {
         flex-direction: column;
         align-items: center;
+        animation: fadeIn 0.6s ease-out, breathe 10s ease-in-out infinite;
+      }
+
+      /* Radial gradient behind card for better readability */
+      .container::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 40%, transparent 70%);
+        border-radius: 16px;
+        z-index: 30;
+        pointer-events: none;
       }
 
       .instruction {
-        font-size: 1.8rem;
-        color: rgba(0, 0, 0, 0.8);
-        margin-bottom: 1rem;
-        font-weight: 400;
-        letter-spacing: 0.3px;
+        font-size: 1.6rem;
+        color: rgba(0, 0, 0, 0.7);
+        margin-bottom: 2rem;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        font-family: 'Inter', sans-serif;
       }
 
       .phrase-display {
-        font-size: 1.4rem;
-        margin-bottom: 2rem;
-        font-weight: 500;
-        transition: color 0.6s ease;
-        color: rgba(0, 0, 0, 0.9);
-        line-height: 1.4;
+        font-size: 1.6rem;
+        margin: 1rem 0 2.5rem;
+        font-weight: 400;
+        transition: all 0.6s ease;
+        color: rgba(0, 0, 0, 0.8);
+        line-height: 1.6;
         font-style: italic;
-        margin-left: 2rem;
-        margin-right: 2rem;
-        background: #fff5d6;
-        padding: 1.5rem;
-        border-radius: 12px;
+        font-family: 'Merriweather', 'Georgia', serif;
+        background: rgba(255, 248, 220, 0.5);
+        padding: 2.5rem 0.5rem;
+        border-radius: 8px;
         word-wrap: break-word;
-        word-break: break-all;
+        word-break: break-word;
         overflow-wrap: break-word;
         white-space: pre-wrap;
-        max-width: 100%;
+        width: 100%;
+        min-height: 4rem;
         overflow: hidden;
-      }
-
-      .phrase-display::before {
-        content: '"';
-        font-size: 2.5rem;
-        color: inherit;
-        margin-right: 0.3rem;
-        font-family: 'Times New Roman', serif;
-        font-weight: 300;
-        transition: color 0.6s ease;
-      }
-
-      .phrase-display::after {
-        content: '"';
-        font-size: 2.5rem;
-        color: inherit;
-        margin-left: 0.3rem;
-        font-family: 'Times New Roman', serif;
-        font-weight: 300;
-        transition: color 0.6s ease;
+        position: relative;
+        border-left: 2px solid rgba(157, 146, 79, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .phrase-display.grey {
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(0, 0, 0, 0.5);
       }
 
       .phrase-display.green {
-        color: rgba(0, 0, 0, 0.9);
+        color: rgba(0, 0, 0, 0.8);
       }
 
       .phrase-display.red {
-        color: #d2691e;
+        color: rgba(139, 69, 19, 0.8);
       }
 
       .form-container {
-        width: 80%;
+        width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
+        align-items: center;
       }
 
       .input-container {
         position: relative;
-        display: flex;
-        align-items: center;
         width: 100%;
+        box-sizing: border-box;
       }
 
       .phrase-input {
         width: 100%;
-        padding: 16px;
-        font-size: 1rem;
-        border: 3px solid rgba(0, 0, 0, 0.3);
-        border-radius: 12px;
+        padding: 24px 20px;
+        font-size: 1.1rem;
+        border: 1px solid rgba(139, 69, 19, 0.15);
+        border-radius: 8px;
         outline: none;
-        transition: all 0.6s ease;
-        background: rgba(255, 255, 255, 0.9);
-        font-family: inherit;
+        transition: all 0.4s ease;
+        background: rgba(255, 255, 255, 0.95);
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
         text-align: left;
-        color: rgba(0, 0, 0, 0.9);
+        color: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
         caret-color: transparent;
-        resize: vertical;
-        min-height: 3em;
+        resize: none;
+        min-height: 4em;
         overflow-y: hidden;
         scrollbar-width: none;
         -ms-overflow-style: none;
         word-wrap: break-word;
-        word-break: break-all;
+        word-break: break-word;
         overflow-wrap: break-word;
         white-space: pre-wrap;
-        line-height: 1.4;
+        line-height: 1.6;
+        box-sizing: border-box;
+        margin: 0;
+        display: flex;
+        align-items: center;
       }
 
       .phrase-input::-webkit-scrollbar {
@@ -228,8 +265,8 @@
         border-radius: 1px;
         pointer-events: none;
         z-index: 10;
-        top: 16px;
-        left: 16px;
+        top: 32px;
+        left: 20px;
         font-size: 1rem;
       }
 
@@ -238,72 +275,83 @@
       }
 
       .phrase-input:focus {
-        transform: scale(1.02);
-        border-color: rgba(0, 0, 0, 0.5);
-        background: rgba(255, 255, 255, 0.95);
+        transform: scale(1.01);
+        border-color: rgba(157, 146, 79, 0.6);
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 0 0 3px rgba(157, 146, 79, 0.1);
       }
 
       .phrase-input.grey {
-        border-color: rgba(0, 0, 0, 0.3);
-        background-color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(255, 255, 255, 0.95);
       }
 
       .phrase-input.green {
-        border-color: #9d924f;
-        background-color: rgba(157, 146, 79, 0.15);
+        border-color: rgba(157, 146, 79, 0.6);
+        background-color: rgba(157, 146, 79, 0.08);
       }
 
       .phrase-input.red {
-        border-color: rgba(210, 105, 30, 0.8);
-        background-color: rgba(255, 179, 102, 0.2);
+        border-color: rgba(139, 69, 19, 0.4);
+        background-color: rgba(139, 69, 19, 0.05);
       }
 
       .enter-btn {
         background: linear-gradient(
           135deg,
-          rgba(157, 146, 79, 0.9) 0%,
-          rgba(157, 146, 79, 0.7) 100%
+          rgba(157, 146, 79, 0.8) 0%,
+          rgba(157, 146, 79, 0.6) 100%
         );
-        color: rgba(0, 0, 0, 0.9);
-        border: 2px solid #9d924f;
-        padding: 18px 32px;
-        font-size: 1.1rem;
-        border-radius: 12px;
+        color: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(157, 146, 79, 0.4);
+        padding: 20px 32px;
+        font-size: 1rem;
+        border-radius: 8px;
         cursor: pointer;
-        transition: all 0.6s ease;
-        width: 100%;
-        font-family: inherit;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        box-shadow:
-          0 6px 20px rgba(157, 146, 79, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transition: all 1.2s ease;
+        width: auto;
+        min-width: 160px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         opacity: 0;
-        transform: translateY(20px);
         pointer-events: none;
         backdrop-filter: blur(10px);
-        text-transform: uppercase;
         position: relative;
         overflow: hidden;
       }
 
+      .enter-btn:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(157, 146, 79, 0.85) 0%,
+          rgba(157, 146, 79, 0.65) 100%
+        );
+        transform: scale(1.05);
+        transition: all 0.1s ease;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .enter-btn:active {
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+      }
+
       .enter-btn.visible {
         opacity: 1;
-        transform: translateY(0);
         pointer-events: auto;
       }
 
       .enter-btn:hover {
         background: linear-gradient(
           135deg,
-          rgba(157, 146, 79, 1) 0%,
-          rgba(157, 146, 79, 0.8) 100%
+          rgba(157, 146, 79, 0.9) 0%,
+          rgba(157, 146, 79, 0.7) 100%
         );
-        transform: translateY(-3px);
-        box-shadow:
-          0 8px 25px rgba(157, 146, 79, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        border-color: #9d924f;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        border-color: rgba(157, 146, 79, 0.6);
       }
 
       .enter-btn:disabled {
@@ -313,20 +361,77 @@
         box-shadow: none;
         border-color: rgba(0, 0, 0, 0.1);
       }
-    </style>
-  </head>
+
+      .helper-text {
+        font-size: 0.8rem;
+        color: rgba(139, 69, 19, 0.5);
+        margin-top: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        text-align: center;
+      }
+
+      .helper-text.visible {
+        opacity: 1;
+      }
+
+
+      .intentor-logo {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.2);
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        letter-spacing: 0.5px;
+        z-index: 15;
+      }
+
+      #particles-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9;
+        filter: blur(2px);
+              }
+
+        /* Responsive scaling for smaller screens */
+        @media (max-width: 600px) {
+          .container {
+            transform: scale(0.9);
+            margin: 2rem 0;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .container {
+            transform: scale(0.85);
+            margin: 1.5rem 0;
+          }
+        }
+      </style>
+    </head>
   <body>
+    <canvas id="particles-canvas"></canvas>
     <div class="container">
-      <div class="instruction">Type this phrase to enter:</div>
-      <div id="phrase-display" class="phrase-display grey">Loading...</div>
+      <div class="instruction">To continue, recall your intention</div>
       <div class="form-container">
+        <div id="phrase-display" class="phrase-display grey">Loading...</div>
         <div class="input-container">
           <textarea id="phrase" class="phrase-input grey"></textarea>
           <div id="custom-caret" class="custom-caret"></div>
         </div>
-        <button id="go" class="enter-btn">Enter</button>
+        <div id="helper-text" class="helper-text">That doesn't match your intention. Try again.</div>
+        <button id="go" class="enter-btn">Continue</button>
       </div>
     </div>
+    <div class="intentor-logo">Intentor</div>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
