@@ -75,7 +75,7 @@ storage.get().then(({ rules }) => {
     // Focus the input field
     inputEl.focus();
   } else {
-    phraseDisplayEl.textContent = 'No rule found for this URL';
+    phraseDisplayEl.textContent = 'No phrase found for this URL';
     phraseDisplayEl.className = 'phrase-display red';
     inputEl.disabled = true;
     buttonEl.classList.remove('visible');

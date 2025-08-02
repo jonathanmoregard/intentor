@@ -120,8 +120,8 @@ const SettingsTab = memo(() => {
     <div className='settings-tab'>
       <h2>Website Rules</h2>
       <p className='description'>
-        Configure which websites require a phrase to access. Add the URL pattern
-        and the phrase that must be typed.
+        Set up websites where you'd like to pause and reflect before visiting.
+        Add the URL pattern and a phrase that helps you remember your intention.
       </p>
 
       <div className='rules-list'>
