@@ -13,6 +13,15 @@ const SettingsTab = memo(() => {
     show: false,
     index: null,
   });
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
+    show: false,
+    message: '',
+    type: 'success',
+  });
   const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const isIntentionEmpty = useCallback((intention: Intention) => {
@@ -126,6 +135,73 @@ const SettingsTab = memo(() => {
     }
   };
 
+  const exportIntentions = () => {
+    const cleanIntentions = intentions.filter(
+      intention => !isIntentionEmpty(intention)
+    );
+    const dataStr = JSON.stringify(cleanIntentions, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'intentions.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importIntentions = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const importedIntentions = JSON.parse(e.target?.result as string);
+            if (Array.isArray(importedIntentions)) {
+              setIntentions(importedIntentions);
+              setToast({
+                show: true,
+                message: `Successfully imported ${importedIntentions.length} intention(s)`,
+                type: 'success',
+              });
+              setTimeout(
+                () => setToast(prev => ({ ...prev, show: false })),
+                3000
+              );
+            } else {
+              setToast({
+                show: true,
+                message:
+                  'Invalid file format. Please select a valid intentions file.',
+                type: 'error',
+              });
+              setTimeout(
+                () => setToast(prev => ({ ...prev, show: false })),
+                3000
+              );
+            }
+          } catch (error) {
+            console.error('Failed to parse intentions file:', error);
+            setToast({
+              show: true,
+              message: 'Failed to parse file. Please check the file format.',
+              type: 'error',
+            });
+            setTimeout(
+              () => setToast(prev => ({ ...prev, show: false })),
+              3000
+            );
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
   return (
     <div className='settings-tab'>
       <h2>Website Intentions</h2>
@@ -188,6 +264,12 @@ const SettingsTab = memo(() => {
         </button>
         <button className='save-btn' onClick={update}>
           Save Changes
+        </button>
+        <button className='export-btn' onClick={exportIntentions}>
+          Export
+        </button>
+        <button className='import-btn' onClick={importIntentions}>
+          Import
         </button>
       </div>
 
@@ -273,6 +355,29 @@ const SettingsTab = memo(() => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <div
+          className={`toast ${toast.type}`}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '500',
+            zIndex: 2000,
+            backgroundColor: toast.type === 'success' ? '#28a745' : '#dc3545',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            animation: 'slideIn 0.3s ease-out',
+          }}
+        >
+          {toast.message}
         </div>
       )}
     </div>

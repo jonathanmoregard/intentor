@@ -193,7 +193,9 @@
       }
 
       .add-btn,
-      .save-btn {
+      .save-btn,
+      .export-btn,
+      .import-btn {
         padding: 0.75rem 1.5rem;
         border: none;
         border-radius: 6px;
@@ -223,6 +225,40 @@
       .save-btn:hover {
         background: rgba(157, 146, 79, 1);
         transform: translateY(-1px);
+      }
+
+      .export-btn {
+        background: rgba(40, 167, 69, 0.8);
+        color: white;
+        border: 2px solid #28a745;
+      }
+
+      .export-btn:hover {
+        background: rgba(40, 167, 69, 1);
+        transform: translateY(-1px);
+      }
+
+      .import-btn {
+        background: rgba(0, 123, 255, 0.8);
+        color: white;
+        border: 2px solid #007bff;
+      }
+
+      .import-btn:hover {
+        background: rgba(0, 123, 255, 1);
+        transform: translateY(-1px);
+      }
+
+      /* Toast Animation */
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
       }
 
       /* About Tab */

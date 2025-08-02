@@ -10,9 +10,9 @@
 
 ## UX Improvements
 
-- Add rule import/export, templates, search/filter
+- Add templates, search/filter
 - Add keyboard shortcuts, undo/redo
-- Add rule validation, statistics
+- Add intention validation, statistics
 
 ## Visual & Assets
 
