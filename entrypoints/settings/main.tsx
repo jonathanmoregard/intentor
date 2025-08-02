@@ -22,6 +22,7 @@ const SettingsTab = memo(() => {
     message: '',
     type: 'success',
   });
+  const [showExamples, setShowExamples] = useState(false);
   const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const isIntentionEmpty = useCallback((intention: Intention) => {
@@ -53,6 +54,12 @@ const SettingsTab = memo(() => {
           ? data.intentions
           : [{ url: '', phrase: '' }];
       setIntentions(initialIntentions);
+
+      // Check if we should show examples based on initial load
+      const nonEmptyIntentions = initialIntentions.filter(
+        intention => !isIntentionEmpty(intention)
+      );
+      setShowExamples(nonEmptyIntentions.length < 2);
     });
   }, []);
 
@@ -78,6 +85,15 @@ const SettingsTab = memo(() => {
   const addIntention = () => {
     setIntentions(prev => {
       const newIntentions = [...prev, { url: '', phrase: '' }];
+      // Focus the new intention's URL input
+      focusNewIntentionUrl(newIntentions.length - 1);
+      return newIntentions;
+    });
+  };
+
+  const addExampleIntention = (example: Intention) => {
+    setIntentions(prev => {
+      const newIntentions = [...prev, example];
       // Focus the new intention's URL input
       focusNewIntentionUrl(newIntentions.length - 1);
       return newIntentions;
@@ -134,6 +150,22 @@ const SettingsTab = memo(() => {
       });
     }
   };
+
+  const exampleIntentions = [
+    {
+      url: 'gmail.com',
+      phrase: 'I am not checking my email out of habit/boredom',
+    },
+    {
+      url: 'reddit.com',
+      phrase: 'I am looking up something I need, I am not rabbit holeing',
+    },
+    {
+      url: 'facebook.com',
+      phrase:
+        'I am entering facebook to check events, not doomscroll newsfeeds',
+    },
+  ];
 
   const exportIntentions = () => {
     const cleanIntentions = intentions.filter(
@@ -272,6 +304,33 @@ const SettingsTab = memo(() => {
           Import
         </button>
       </div>
+
+      {/* Example Intentions */}
+      {showExamples && (
+        <div className='examples-section'>
+          <h3>Example Intentions</h3>
+          <p className='examples-description'>
+            Quick-add these examples to get started:
+          </p>
+          <div className='examples-list'>
+            {exampleIntentions.map((example, i) => (
+              <div key={`example-${i}`} className='example-item'>
+                <div className='example-content'>
+                  <div className='example-url'>{example.url}</div>
+                  <div className='example-phrase'>{example.phrase}</div>
+                </div>
+                <button
+                  className='quick-add-btn'
+                  onClick={() => addExampleIntention(example)}
+                  title={`Add ${example.url} intention`}
+                >
+                  +
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation Dialog */}
       {deleteConfirm.show && (
