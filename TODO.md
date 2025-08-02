@@ -30,3 +30,4 @@
 - Add automated testing, CI/CD
 - Add documentation, security audit
 - Add privacy policy, terms of service
+- fix save rules rate,/deboune, to avoid overloading sync api

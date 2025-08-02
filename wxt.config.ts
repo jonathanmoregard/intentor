@@ -12,14 +12,11 @@ export default defineConfig({
     manifest_version: 3,
     permissions: ['storage', 'webNavigation', 'tabs'],
     host_permissions: ['<all_urls>'],
-    // background: {
-    //   service_worker: "entrypoints/background.ts",
-    //   type: "module",
-    // },
-    options_ui: {
-      page: 'entrypoints/options/index.html',
-      open_in_tab: true,
+    background: {
+      service_worker: 'entrypoints/background.ts',
+      type: 'module',
     },
+
     action: {
       default_popup: 'entrypoints/popup/index.html',
     },
@@ -28,7 +25,10 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ['entrypoints/interstitial/index.html'],
+        resources: [
+          'entrypoints/interstitial/index.html',
+          'entrypoints/settings/index.html',
+        ],
         matches: ['<all_urls>'],
       },
     ],

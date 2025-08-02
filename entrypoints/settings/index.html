@@ -26,6 +26,8 @@
         background: white;
       }
 
+
+
       /* Sidebar Styles */
       .sidebar {
         width: 250px;
@@ -280,6 +282,8 @@
           flex-direction: row;
           align-items: center;
           padding: 0 1rem;
+          border-right: none;
+          border-bottom: 1px solid #e9ecef;
         }
 
         .sidebar-header {
@@ -291,9 +295,11 @@
         .sidebar-nav {
           flex-direction: row;
           padding: 0;
+          display: flex;
         }
 
         .tab-btn {
+          flex: 1;
           padding: 1rem;
           text-align: center;
           border-left: none;
@@ -303,6 +309,10 @@
         .tab-btn.active {
           border-left-color: transparent;
           border-bottom-color: #9d924f;
+        }
+
+        .content {
+          padding: 1rem;
         }
 
         .rule-inputs {
