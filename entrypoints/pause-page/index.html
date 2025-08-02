@@ -189,7 +189,7 @@
         min-height: 4rem;
         overflow: hidden;
         position: relative;
-        border-left: 2px solid rgba(157, 146, 79, 0.3);
+        border-left: 2px solid rgba(157, 156, 79, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -276,9 +276,9 @@
 
       .phrase-input:focus {
         transform: scale(1.01);
-        border-color: rgba(157, 146, 79, 0.6);
+        border-color: rgba(157, 156, 79, 0.6);
         background: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 0 0 3px rgba(157, 146, 79, 0.1);
+        box-shadow: 0 0 0 3px rgba(157, 156, 79, 0.1);
       }
 
       .phrase-input.grey {
@@ -287,8 +287,8 @@
       }
 
       .phrase-input.green {
-        border-color: rgba(157, 146, 79, 0.6);
-        background-color: rgba(157, 146, 79, 0.08);
+        border-color: rgba(157, 156, 79, 0.6);
+        background-color: rgba(157, 156, 79, 0.08);
       }
 
       .phrase-input.red {
@@ -299,7 +299,7 @@
       .enter-btn {
         background: linear-gradient(
           135deg,
-          rgba(157, 146, 79, 0.8) 0%,
+          rgba(157, 156, 79, 0.8) 0%,
           rgba(157, 146, 79, 0.6) 100%
         );
         color: rgba(0, 0, 0, 0.8);
@@ -315,11 +315,23 @@
         font-weight: 500;
         letter-spacing: 0.3px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        opacity: 0;
+        opacity: 0.3;
         pointer-events: none;
         backdrop-filter: blur(10px);
         position: relative;
         overflow: hidden;
+      }
+
+      .enter-btn.disabled {
+        background: linear-gradient(
+          135deg,
+          rgba(128, 128, 128, 0.4) 0%,
+          rgba(128, 128, 128, 0.3) 100%
+        );
+        color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(128, 128, 128, 0.3);
+        cursor: not-allowed;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
 
       .enter-btn:hover {
@@ -343,15 +355,26 @@
         pointer-events: auto;
       }
 
+      .enter-btn.visible:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(157, 156, 79, 0.85) 0%,
+          rgba(157, 156, 79, 0.65) 100%
+        );
+        transform: scale(1.05);
+        transition: all 0.1s ease;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      }
+
       .enter-btn:hover {
         background: linear-gradient(
           135deg,
-          rgba(157, 146, 79, 0.9) 0%,
-          rgba(157, 146, 79, 0.7) 100%
+          rgba(157, 156, 79, 0.9) 0%,
+          rgba(157, 156, 79, 0.7) 100%
         );
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-        border-color: rgba(157, 146, 79, 0.6);
+        border-color: rgba(157, 156, 79, 0.6);
       }
 
       .enter-btn:disabled {

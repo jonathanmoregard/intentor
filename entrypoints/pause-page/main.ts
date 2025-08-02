@@ -162,6 +162,7 @@ storage.get().then(({ intentions }) => {
         phraseDisplayEl.className = 'phrase-display grey';
         inputEl.className = 'phrase-input grey';
         buttonEl.classList.remove('visible');
+        buttonEl.classList.add('disabled');
         helperTextEl.classList.remove('visible');
       } else if (expectedPhrase.startsWith(currentValue)) {
         // Partial match - green state (on the right track)
@@ -170,8 +171,10 @@ storage.get().then(({ intentions }) => {
         helperTextEl.classList.remove('visible');
         if (currentValue === expectedPhrase) {
           buttonEl.classList.add('visible');
+          buttonEl.classList.remove('disabled');
         } else {
           buttonEl.classList.remove('visible');
+          buttonEl.classList.add('disabled');
         }
       } else {
         // Incorrect phrase - delay red state to prevent harsh feedback
@@ -179,6 +182,7 @@ storage.get().then(({ intentions }) => {
           phraseDisplayEl.className = 'phrase-display red';
           inputEl.className = 'phrase-input red';
           buttonEl.classList.remove('visible');
+          buttonEl.classList.add('disabled');
           helperTextEl.classList.add('visible');
         }, 400);
       }
