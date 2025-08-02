@@ -16,6 +16,5 @@ export const storage = {
 
 export type Rule = {
   url: string;
-  prompt: string;
-  passphrase: string;
+  phrase: string;
 };

@@ -12,7 +12,7 @@ const Options = () => {
   const update = () => storage.set({ rules })
 
   const add = () => {
-    setRules([...rules, { url: '', prompt: '', passphrase: '' }])
+    setRules([...rules, { url: '', phrase: '' }])
   }
 
   return (
@@ -27,17 +27,10 @@ const Options = () => {
             }}
           />
           <input
-            placeholder="Prompt"
-            value={r.prompt}
+            placeholder="Phrase"
+            value={r.phrase}
             onChange={e => {
-              const copy = [...rules]; copy[i].prompt = e.target.value; setRules(copy)
-            }}
-          />
-          <input
-            placeholder="Passphrase"
-            value={r.passphrase}
-            onChange={e => {
-              const copy = [...rules]; copy[i].passphrase = e.target.value; setRules(copy)
+              const copy = [...rules]; copy[i].phrase = e.target.value; setRules(copy)
             }}
           />
         </div>
