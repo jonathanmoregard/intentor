@@ -37,12 +37,22 @@ const SettingsTab = memo(() => {
   }, []);
 
   const saveIntentions = useCallback(
-    (intentionsToSave: Intention[]) => {
-      // Remove empty intentions before saving
-      const cleanIntentions = intentionsToSave.filter(
-        intention => !isIntentionEmpty(intention)
-      );
-      storage.set({ intentions: cleanIntentions });
+    async (intentionsToSave: Intention[]) => {
+      try {
+        // Remove empty intentions before saving
+        const cleanIntentions = intentionsToSave.filter(
+          intention => !isIntentionEmpty(intention)
+        );
+        await storage.set({ intentions: cleanIntentions });
+      } catch (error) {
+        console.error('Failed to save intentions:', error);
+        setToast({
+          show: true,
+          message: 'Failed to save intentions. Please try again.',
+          type: 'error',
+        });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      }
     },
     [isIntentionEmpty]
   );
@@ -71,12 +81,21 @@ const SettingsTab = memo(() => {
     }
   }, [intentions, saveIntentions]);
 
-  const update = () => {
-    saveIntentions(intentions);
-    // Ensure we always have at least one intention (empty if needed)
+  const update = async () => {
+    await saveIntentions(intentions);
+
+    // Show success toast only when manually saving
     const cleanIntentions = intentions.filter(
       intention => !isIntentionEmpty(intention)
     );
+    setToast({
+      show: true,
+      message: `Successfully saved ${cleanIntentions.length} intention(s)`,
+      type: 'success',
+    });
+    setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+
+    // Ensure we always have at least one intention (empty if needed)
     setIntentions(
       cleanIntentions.length > 0 ? cleanIntentions : [{ url: '', phrase: '' }]
     );
@@ -168,17 +187,45 @@ const SettingsTab = memo(() => {
   ];
 
   const exportIntentions = () => {
-    const cleanIntentions = intentions.filter(
-      intention => !isIntentionEmpty(intention)
-    );
-    const dataStr = JSON.stringify(cleanIntentions, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'intentions.json';
-    link.click();
-    URL.revokeObjectURL(url);
+    try {
+      const cleanIntentions = intentions.filter(
+        intention => !isIntentionEmpty(intention)
+      );
+
+      if (cleanIntentions.length === 0) {
+        setToast({
+          show: true,
+          message: 'No intentions to export. Add some intentions first.',
+          type: 'error',
+        });
+        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+        return;
+      }
+
+      const dataStr = JSON.stringify(cleanIntentions, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'intentions.json';
+      link.click();
+      URL.revokeObjectURL(url);
+
+      setToast({
+        show: true,
+        message: `Successfully exported ${cleanIntentions.length} intention(s)`,
+        type: 'success',
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    } catch (error) {
+      console.error('Export failed:', error);
+      setToast({
+        show: true,
+        message: 'Failed to export intentions. Please try again.',
+        type: 'error',
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    }
   };
 
   const importIntentions = () => {
@@ -219,7 +266,8 @@ const SettingsTab = memo(() => {
             console.error('Failed to parse intentions file:', error);
             setToast({
               show: true,
-              message: 'Failed to parse file. Please check the file format.',
+              message:
+                "Ooops! Couldn't understand the file you picked for import. Are you sure it's the right one?",
               type: 'error',
             });
             setTimeout(
