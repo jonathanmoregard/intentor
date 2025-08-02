@@ -10,8 +10,6 @@
 
 ## UX Improvements
 
-- Settings page UX review
-- Add confirmation dialogs for deletions
 - Add rule import/export, templates, search/filter
 - Add keyboard shortcuts, undo/redo
 - Add rule validation, statistics
@@ -29,4 +27,4 @@
 - Add automated testing, CI/CD
 - Add documentation, security audit
 - Add privacy policy, terms of service
-- fix save rules rate,/deboune, to avoid overloading sync api
+- fix save rules rate/deboune, to avoid overloading sync api
