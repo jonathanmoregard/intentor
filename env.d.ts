@@ -1,8 +1,8 @@
 interface ImportMetaEnv {
-  readonly MODE: 'development' | 'production'
+  readonly MODE: 'development' | 'production';
   // add more env vars here if needed
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv
+  readonly env: ImportMetaEnv;
 }

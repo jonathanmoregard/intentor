@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill';
 
 declare const __IS_DEV__: boolean;
 
