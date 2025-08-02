@@ -18,7 +18,6 @@
 
 ## Visual & Assets
 
-- Design proper extension icon
 - Improve popup design and functionality
 - Add loading states, error handling
 - Add dark mode, accessibility improvements

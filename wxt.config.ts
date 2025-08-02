@@ -21,7 +21,7 @@ export default defineConfig({
       default_popup: 'entrypoints/popup/index.html',
     },
     icons: {
-      128: 'icon/128.png',
+      128: 'icon/intentor-128.png',
     },
     web_accessible_resources: [
       {
