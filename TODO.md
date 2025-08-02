@@ -1,6 +1,7 @@
-#TODO
+# TODO
 
 - Rename to "Sanity Check"
+- Update description
 
 ##TEST
 
