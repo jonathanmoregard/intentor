@@ -1,10 +1,10 @@
 # Intentor
 
-A browser extension that adds intentional friction to web browsing by requiring users to type a specific phrase before accessing certain websites.
+A browser extension that helps you pause and reflect before visiting certain websites. It gives you an opportunity to reflect and write down an intention before you enter the page.
 
 ## Overview
 
-Intentor is designed to help users be more mindful about their web browsing habits. When you try to visit a configured website, the extension intercepts the navigation and shows an interstitial page where you must type the exact phrase associated with that site to proceed.
+Intentor is designed to help you be more mindful about your web browsing habits. When you try to visit a configured website, the extension gives you an opportunity to reflect and write down an intention before you enter the page.
 
 ## Current Design
 
@@ -12,7 +12,7 @@ Intentor is designed to help users be more mindful about their web browsing habi
 
 - **URL Matching**: The extension checks if the target URL matches any configured rules
 - **Interstitial Page**: When a match is found, users are redirected to a custom interstitial page
-- **Phrase Verification**: Users must type the exact phrase to continue to the destination
+- **Phrase Verification**: Users have an opportunity to reflect and write down their intention before continuing
 
 ### User Interface
 
@@ -21,7 +21,7 @@ Intentor is designed to help users be more mindful about their web browsing habi
 - Simple form interface for managing rules
 - Each rule consists of:
   - **URL**: The website pattern to match (e.g., "facebook.com")
-  - **Phrase**: The text users must type to access the site
+  - **Phrase**: The text that represents your intention for visiting the site
 - Add/remove rules and save configuration
 
 #### Interstitial Page

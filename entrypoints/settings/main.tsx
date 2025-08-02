@@ -276,8 +276,8 @@ const AboutTab = memo(() => {
       <div className='about-content'>
         <p>
           Intentor is a browser extension that helps you pause and reflect
-          before visiting certain websites. It creates a mindful moment where
-          you must type a specific phrase to continue.
+          before visiting certain websites. It gives you an opportunity to
+          reflect and write down an intention before you enter the page.
         </p>
 
         <h3>How it works</h3>
