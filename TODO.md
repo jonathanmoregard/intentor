@@ -28,3 +28,7 @@
 - Add documentation, security audit
 - Add privacy policy, terms of service
 - fix save rules rate/deboune, to avoid overloading sync api
+
+# Bugs
+
+- First time navigate onwards return to intent screen
