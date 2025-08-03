@@ -19,7 +19,7 @@ const domainEquals = (url1: string, url2: string): boolean => {
 export default defineBackground(async () => {
   // Cache data that won't change during session
   let cachedIntentions: (Intention & { hostname: string })[] = [];
-  const pausePageUrl = browser.runtime.getURL('pause-page.html');
+  const intentionPageUrl = browser.runtime.getURL('intention-page.html');
 
   // Helper to sanitize and parse a single intention URL
   const processIntention = (
@@ -77,9 +77,9 @@ export default defineBackground(async () => {
       return;
     }
 
-    // Rule 2: If origin is pause page, allow
-    if (sourceUrl && sourceUrl.startsWith(pausePageUrl)) {
-      console.log('[Intentor] Rule 2: Origin is pause page, allowing');
+    // Rule 2: If origin is intention page, allow
+    if (sourceUrl && sourceUrl.startsWith(intentionPageUrl)) {
+      console.log('[Intentor] Rule 2: Origin is intention page, allowing');
       return;
     }
 
@@ -118,12 +118,12 @@ export default defineBackground(async () => {
 
     if (match) {
       console.log(
-        '[Intentor] Rule 4: Blocking navigation, showing pause page for:',
+        '[Intentor] Rule 4: Blocking navigation, showing intention page for:',
         match
       );
 
       const redirectUrl = browser.runtime.getURL(
-        'pause-page.html?target=' + encodeURIComponent(targetUrl)
+        'intention-page.html?target=' + encodeURIComponent(targetUrl)
       );
 
       try {

@@ -29,12 +29,12 @@ Intentor is a browser extension that helps you pause and reflect before visiting
 
 4. **Test it:**
    - Try visiting the website you configured
-   - You should see a pause page asking you to type your phrase
+   - You should see an intention page asking you to type your phrase
    - Type the exact phrase to continue
 
 ## Features to Test
 
-- ✅ **Basic functionality**: Add intentions, visit sites, see pause page
+- ✅ **Basic functionality**: Add intentions, visit sites, see intention page
 - ✅ **Import/Export**: Try exporting your intentions and importing them
 - ✅ **Example intentions**: Quick-add the provided examples
 - ✅ **Cross-device sync**: If using Chrome sync, intentions should sync across devices
@@ -57,7 +57,7 @@ Please provide feedback on:
 - Uses Chrome Extension Manifest V3
 - Stores data in browser storage (syncs across devices)
 - Background script handles navigation interception
-- Pause page for intention verification
+- Intention page for intention verification
 
 ## Version
 

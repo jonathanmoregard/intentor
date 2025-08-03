@@ -26,7 +26,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: [
-          'entrypoints/pause-page/index.html',
+          'entrypoints/intention-page/index.html',
           'entrypoints/settings/index.html',
         ],
         matches: ['<all_urls>'],

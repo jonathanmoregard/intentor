@@ -11,7 +11,7 @@ Intentor is designed to help you be more mindful about your web browsing habits.
 ### Core Functionality
 
 - **URL Matching**: The extension checks if the target URL matches any configured rules
-- **Pause Page**: When a match is found, users are redirected to a custom pause page
+- **Intention Page**: When a match is found, users are redirected to a custom intention page
 - **Phrase Verification**: Users have an opportunity to reflect and write down their intention before continuing
 
 ### User Interface
@@ -24,7 +24,7 @@ Intentor is designed to help you be more mindful about your web browsing habits.
   - **Phrase**: The text that represents your intention for visiting the site
 - Add/remove rules and save configuration
 
-#### Pause Page
+#### Intention Page
 
 - **Modern Design**: Clean, centered card layout with subtle shadows
 - **Phrase Display**: Shows the expected phrase above the input field

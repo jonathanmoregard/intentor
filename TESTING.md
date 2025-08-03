@@ -15,7 +15,7 @@
 - Verify settings persistence across browser instances
 - Test sync conflicts resolution
 
-### Pause Page Testing
+### Intention Page Testing
 
 - **Long phrases**: Test with very long intention phrases
 - **Special characters**: Test with unicode, emojis, special symbols
@@ -46,18 +46,18 @@
 
 1. Configure an intention rule for "facebook.com"
 2. Open a new tab and navigate to facebook.com
-3. Verify pause page appears with correct intention text
+3. Verify intention page appears with correct intention text
 4. Enter the correct intention phrase
 5. Verify navigation to facebook.com succeeds
 6. Navigate within facebook.com (different pages)
-7. Verify no additional pause pages appear
+7. Verify no additional intention pages appear
 
 **Expected Results**:
 
-- Pause page shows on first visit
+- Intention page shows on first visit
 - Correct intention text is displayed
 - Navigation succeeds after correct input
-- No pause pages on subsequent navigation within same domain
+- No intention pages on subsequent navigation within same domain
 
 #### 2. Cross-Domain Navigation
 
@@ -68,13 +68,13 @@
 2. Visit facebook.com, complete intention check, navigate to site
 3. Navigate to google.com (different domain)
 4. Navigate back to facebook.com
-5. Verify pause page appears again
+5. Verify intention page appears again
 
 **Expected Results**:
 
-- First visit to facebook.com shows pause page
+- First visit to facebook.com shows intention page
 - Navigation to google.com clears allowList
-- Return to facebook.com shows pause page again
+- Return to facebook.com shows intention page again
 
 #### 3. Multi-Tab Independent Behavior
 
