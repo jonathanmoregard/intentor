@@ -120,20 +120,9 @@ const phraseDisplayEl = document.getElementById(
 ) as HTMLElement;
 const inputEl = document.getElementById('phrase') as HTMLTextAreaElement;
 const buttonEl = document.getElementById('go') as HTMLButtonElement;
-const customCaretEl = document.getElementById('custom-caret') as HTMLElement;
 const helperTextEl = document.getElementById('helper-text') as HTMLElement;
 
 let expectedPhrase = '';
-let errorTimeout: number | null = null;
-
-// Function to show/hide caret
-const updateCaretVisibility = () => {
-  if (document.activeElement === inputEl && inputEl.value === '') {
-    customCaretEl.style.display = 'block';
-  } else {
-    customCaretEl.style.display = 'none';
-  }
-};
 
 storage.get().then(({ intentions }) => {
   const match = intentions.find(r => target?.includes(r.url));
@@ -149,13 +138,6 @@ storage.get().then(({ intentions }) => {
       }
 
       const currentValue = inputEl.value;
-      updateCaretVisibility();
-
-      // Clear any existing error timeout
-      if (errorTimeout) {
-        clearTimeout(errorTimeout);
-        errorTimeout = null;
-      }
 
       if (currentValue === '') {
         // Empty input - grey state
@@ -177,20 +159,14 @@ storage.get().then(({ intentions }) => {
           buttonEl.classList.add('disabled');
         }
       } else {
-        // Incorrect phrase - delay red state to prevent harsh feedback
-        errorTimeout = setTimeout(() => {
-          phraseDisplayEl.className = 'phrase-display red';
-          inputEl.className = 'phrase-input red';
-          buttonEl.classList.remove('visible');
-          buttonEl.classList.add('disabled');
-          helperTextEl.classList.add('visible');
-        }, 400);
+        // Incorrect phrase - show red state immediately
+        phraseDisplayEl.className = 'phrase-display red';
+        inputEl.className = 'phrase-input red';
+        buttonEl.classList.remove('visible');
+        buttonEl.classList.add('disabled');
+        helperTextEl.classList.add('visible');
       }
     });
-
-    // Set up focus/blur events for caret visibility
-    inputEl.addEventListener('focus', updateCaretVisibility);
-    inputEl.addEventListener('blur', updateCaretVisibility);
 
     // Set up keydown event listener for Enter key
     inputEl.addEventListener('keydown', e => {

@@ -62,14 +62,6 @@
         }
       }
 
-      @keyframes slow-blink {
-        0%, 70% {
-          opacity: 1;
-        }
-        71%, 100% {
-          opacity: 0;
-        }
-      }
 
       body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -235,7 +227,7 @@
         text-align: left;
         color: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
-        caret-color: transparent;
+        caret-color: rgba(0, 0, 0, 0.8);
         resize: none;
         min-height: 4em;
         overflow-y: hidden;
@@ -256,19 +248,7 @@
         display: none;
       }
 
-      .custom-caret {
-        position: absolute;
-        width: 2px;
-        height: 1em;
-        background-color: rgba(0, 0, 0, 0.3);
-        animation: slow-blink 2s infinite;
-        border-radius: 1px;
-        pointer-events: none;
-        z-index: 10;
-        top: 32px;
-        left: 20px;
-        font-size: 1rem;
-      }
+
 
       .phrase-input::placeholder {
         color: rgba(0, 0, 0, 0.5);
@@ -448,7 +428,6 @@
         <div id="phrase-display" class="phrase-display grey">Loading...</div>
         <div class="input-container">
           <textarea id="phrase" class="phrase-input grey"></textarea>
-          <div id="custom-caret" class="custom-caret"></div>
         </div>
         <div id="helper-text" class="helper-text">That doesn't match your intention. Try again.</div>
         <button id="go" class="enter-btn">Continue</button>
