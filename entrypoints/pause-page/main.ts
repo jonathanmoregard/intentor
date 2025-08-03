@@ -76,7 +76,7 @@ function draw() {
 
     // Alternate between golden and white
     if (p.x % 2 === 0) {
-      ctx!.fillStyle = `rgba(255, 215, 0, ${p.alpha})`; // Golden
+      ctx!.fillStyle = `rgba(254, 227, 164, ${p.alpha})`; // Golden
     } else {
       ctx!.fillStyle = `rgba(255, 255, 255, ${p.alpha})`; // White
     }
