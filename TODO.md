@@ -1,34 +1,5 @@
 # TODO
 
-## Testing
-
-- Cross-platform: mobile, Firefox, Safari, Edge
-- Cross-device sync functionality
-- Pause page: long phrases, special chars, emojis, accessibility
-- Settings: mobile, performance, accessibility
-- Extension: install/uninstall, updates, permissions, incognito
-
-## Automated Testing Considerations
-
-### Unit Tests
-
-- allowList management functions
-- Domain parsing and matching
-- Storage operations
-- URL validation
-
-### Integration Tests
-
-- Background script + popup communication
-- Storage + UI synchronization
-- Cross-tab state management
-
-### E2E Tests
-
-- Complete user workflows
-- Multi-tab scenarios
-- Browser-specific behaviors
-
 ## UX Improvements
 
 - Add templates, search/filter
@@ -50,7 +21,3 @@
 - Add privacy policy, terms of service
 - fix save rules rate/deboune, to avoid overloading sync api
 - Look over format/handling of "url" in intention - currently a bit of a mess
-
-# Bugs
-
-- First time navigate onwards return to intent screen
