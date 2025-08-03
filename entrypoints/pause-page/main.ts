@@ -5,8 +5,6 @@ const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement;
 
 if (!canvas) {
   console.error('Canvas element not found');
-} else {
-  console.log('Canvas found, setting up particles');
 }
 
 const ctx = canvas.getContext('2d');

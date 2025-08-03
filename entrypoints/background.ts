@@ -18,6 +18,15 @@ export default defineBackground(() => {
     const currentDomain = getDomain(details.url);
     const allowedDomain = allowList.get(details.tabId);
 
+    console.log('[Intentor] Navigation check:', {
+      url: details.url,
+      currentDomain,
+      tabId: details.tabId,
+      allowedDomain,
+      allowListSize: allowList.size,
+      allowListEntries: Array.from(allowList.entries()),
+    });
+
     if (allowedDomain && currentDomain === allowedDomain) {
       console.log('[Intentor] Allowing follow-up navigation to:', details.url);
       return;
