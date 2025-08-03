@@ -78,20 +78,18 @@
 
 #### 3. Multi-Tab Independent Behavior
 
-**Objective**: Verify each tab maintains independent allowList state
+**Objective**: Verify each tab is evaluated independently based on active tab state
 **Steps**:
 
 1. Configure intention rule for "facebook.com"
 2. Open Tab A, visit facebook.com, complete intention check
 3. Open Tab B, visit facebook.com
-4. Verify Tab B shows pause page (independent of Tab A)
+4. Verify Tab B shows pause page
 
 **Expected Results**:
 
 - Tab A allows navigation within facebook.com
 - Tab B shows pause page on first visit
-- Each tab maintains independent allowList state
-- New tabs opened from Tab A (after passing check) should not show pause page
 
 #### 4. Tab Closure and Reopening
 
@@ -157,9 +155,10 @@
 
 **Expected Results**:
 
-- Duplicated tab should NOT show pause page (inherits allowList state)
-- Original tab maintains allowList state
-- Each tab operates independently
+- If facebook tab is active when duplicating: duplicated tab shows pause page (new tab ID)
+- If facebook tab is not active: duplicated tab shows pause page (new tab ID)
+- Original tab maintains its state
+- Each tab operates independently based on current state
 
 #### 8. Incognito/Private Mode
 
