@@ -40,6 +40,12 @@ Intentor embraces a **mindful, non-coercive approach** to digital wellness. Rath
 
 For detailed design specifications, see [STYLE_GUIDE.md](./STYLE_GUIDE.md).
 
+For testing scenarios and guidelines, see [TESTING.md](./TESTING.md).
+
+## Contributing
+
+Found a bug? Please use our [Bug Report Template](./BUG_REPORT_TEMPLATE.md) to report issues.
+
 ## Use Cases
 
 - **Productivity**: Add gentle friction to distracting websites like social media

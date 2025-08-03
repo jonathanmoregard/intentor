@@ -8,6 +8,27 @@
 - Settings: mobile, performance, accessibility
 - Extension: install/uninstall, updates, permissions, incognito
 
+## Automated Testing Considerations
+
+### Unit Tests
+
+- allowList management functions
+- Domain parsing and matching
+- Storage operations
+- URL validation
+
+### Integration Tests
+
+- Background script + popup communication
+- Storage + UI synchronization
+- Cross-tab state management
+
+### E2E Tests
+
+- Complete user workflows
+- Multi-tab scenarios
+- Browser-specific behaviors
+
 ## UX Improvements
 
 - Add templates, search/filter
