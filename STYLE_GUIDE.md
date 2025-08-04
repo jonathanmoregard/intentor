@@ -1,8 +1,8 @@
-# Intentor Style Guide
+# Intender Style Guide
 
 ## Design Philosophy
 
-Intentor embraces a **mindful, non-coercive approach** to digital wellness. Rather than blocking or punishing users, it creates gentle moments of reflection and intentionality.
+Intender embraces a **mindful, non-coercive approach** to digital wellness. Rather than blocking or punishing users, it creates gentle moments of reflection and intentionality.
 
 ### Core Principles
 

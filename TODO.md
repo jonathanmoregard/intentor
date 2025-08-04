@@ -1,5 +1,10 @@
 # TODO
 
+## Revenue & Marketing
+
+- Collect metrics on use and use to drive donations (you have avoided rabbit hoes 1k ties, do you want to send me some cash?) - lookup best practices
+- Add "share button" for users to share either extension, or specific intentions, with a link to the app in marketplace (after v1 - needs to have a link)
+
 ## UX Improvements
 
 - Add templates, search/filter

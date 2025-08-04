@@ -1,4 +1,4 @@
-# Intentor Testing Guide
+# Intender Testing Guide
 
 ## General Testing Areas
 

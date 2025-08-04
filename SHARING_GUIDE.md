@@ -1,8 +1,8 @@
-# Intentor Extension - Testing Guide
+# Intender Extension - Testing Guide
 
-## What is Intentor?
+## What is Intender?
 
-Intentor is a browser extension that helps you pause and reflect before visiting certain websites. It creates a moment of intentionality by requiring you to type a specific phrase before continuing to distracting sites.
+Intender is a browser extension that helps you pause and reflect before visiting certain websites. It creates a moment of intentionality by requiring you to type a specific phrase before continuing to distracting sites.
 
 ## How to Install (Chrome/Edge)
 
@@ -21,7 +21,7 @@ Intentor is a browser extension that helps you pause and reflect before visiting
 
 3. **Set up your first intention:**
 
-   - Click the Intentor icon in your browser toolbar
+   - Click the Intender icon in your browser toolbar
    - Go to Settings
    - Add a website URL (e.g., "reddit.com")
    - Add a phrase (e.g., "I am looking up something specific, not browsing aimlessly")

@@ -7,7 +7,7 @@ export default defineConfig({
     },
   }),
   manifest: {
-    name: 'Intentor',
+    name: 'Intender',
     version: '0.1.0',
     manifest_version: 3,
     permissions: ['storage', 'webNavigation', 'tabs'],
@@ -21,7 +21,7 @@ export default defineConfig({
       default_popup: 'entrypoints/popup/index.html',
     },
     icons: {
-      128: 'icon/intentor-128.png',
+      128: 'icon/intender-128.png',
     },
     web_accessible_resources: [
       {

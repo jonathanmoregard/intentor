@@ -1,10 +1,10 @@
-# Intentor
+# Intender
 
 A browser extension that helps you pause and reflect before visiting certain websites. It gives you an opportunity to reflect and write down an intention before you enter the page.
 
 ## Overview
 
-Intentor is designed to help you be more mindful about your web browsing habits. When you try to visit a configured website, the extension gives you an opportunity to reflect and write down an intention before you enter the page.
+Intender is designed to help you be more mindful about your web browsing habits. When you try to visit a configured website, the extension gives you an opportunity to reflect and write down an intention before you enter the page.
 
 ## Current Design
 
@@ -36,7 +36,7 @@ Intentor is designed to help you be more mindful about your web browsing habits.
 
 ## Design Philosophy
 
-Intentor embraces a **mindful, non-coercive approach** to digital wellness. Rather than blocking or punishing users, it creates gentle moments of reflection and intentionality.
+Intender embraces a **mindful, non-coercive approach** to digital wellness. Rather than blocking or punishing users, it creates gentle moments of reflection and intentionality.
 
 For detailed design specifications, see [STYLE_GUIDE.md](./STYLE_GUIDE.md).
 
@@ -45,6 +45,8 @@ For testing scenarios and guidelines, see [TESTING.md](./TESTING.md).
 ## Contributing
 
 Found a bug? Please use our [Bug Report Template](./BUG_REPORT_TEMPLATE.md) to report issues.
+
+_Built with [Cursor](https://cursor.sh) - the AI-first code editor._
 
 ## Use Cases
 

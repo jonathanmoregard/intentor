@@ -63,7 +63,7 @@ export default defineBackground(async () => {
     const sourceUrl = sourceTab?.url;
 
     // Development logging
-    console.log('[Intentor] Navigation check:', {
+    console.log('[Intender] Navigation check:', {
       targetUrl,
       sourceUrl,
       navigationTabId,
@@ -73,13 +73,13 @@ export default defineBackground(async () => {
 
     // Rule 1: If navigating from same domain → same domain, allow
     if (sourceUrl && domainEquals(sourceUrl, targetUrl)) {
-      console.log('[Intentor] Rule 1: Same domain navigation, allowing');
+      console.log('[Intender] Rule 1: Same domain navigation, allowing');
       return;
     }
 
     // Rule 2: If origin is intention page, allow
     if (sourceUrl && sourceUrl.startsWith(intentionPageUrl)) {
-      console.log('[Intentor] Rule 2: Origin is intention page, allowing');
+      console.log('[Intender] Rule 2: Origin is intention page, allowing');
       return;
     }
 
@@ -96,7 +96,7 @@ export default defineBackground(async () => {
       activeTabUrl &&
       domainEquals(activeTabUrl, targetUrl)
     ) {
-      console.log('[Intentor] Rule 3: Active tab on same domain, allowing');
+      console.log('[Intender] Rule 3: Active tab on same domain, allowing');
       return;
     }
 
@@ -118,7 +118,7 @@ export default defineBackground(async () => {
 
     if (match) {
       console.log(
-        '[Intentor] Rule 4: Blocking navigation, showing intention page for:',
+        '[Intender] Rule 4: Blocking navigation, showing intention page for:',
         match
       );
 
@@ -130,7 +130,7 @@ export default defineBackground(async () => {
         await browser.tabs.update(details.tabId, { url: redirectUrl });
       } catch (error) {
         // Tab might be gone, ignore the error
-        console.log('[Intentor] Tab update failed, tab may be closed:', error);
+        console.log('[Intender] Tab update failed, tab may be closed:', error);
       }
     }
   });

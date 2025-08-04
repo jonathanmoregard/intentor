@@ -494,10 +494,10 @@ const SettingsTab = memo(() => {
 const AboutTab = memo(() => {
   return (
     <div className='about-tab'>
-      <h2>About Intentor</h2>
+      <h2>About Intender</h2>
       <div className='about-content'>
         <p>
-          Intentor is a browser extension that helps you pause and reflect
+          Intender is a browser extension that helps you pause and reflect
           before visiting certain websites. It gives you an opportunity to
           reflect and write down an intention before you enter the page.
         </p>
@@ -506,7 +506,7 @@ const AboutTab = memo(() => {
         <ol>
           <li>Configure websites and phrases in the Settings tab</li>
           <li>
-            When you visit a configured website, Intentor shows a pause page
+            When you visit a configured website, Intender shows a pause page
             page
           </li>
           <li>Type the exact phrase to continue to the website</li>
@@ -544,7 +544,7 @@ const Sidebar = memo(
   }) => (
     <div className='sidebar'>
       <div className='sidebar-header'>
-        <h1>Intentor</h1>
+        <h1>Intender</h1>
       </div>
       <nav className='sidebar-nav'>
         <button
