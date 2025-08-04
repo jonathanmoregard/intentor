@@ -10,6 +10,7 @@
 - Add templates, search/filter
 - Add keyboard shortcuts, undo/redo
 - Add intention validation, statistics
+- power users & a11y review
 
 ## Visual & Assets
 
