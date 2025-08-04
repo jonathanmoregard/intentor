@@ -24,7 +24,9 @@ const SettingsTab = memo(() => {
     type: 'success',
   });
   const [showExamples, setShowExamples] = useState(false);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
   const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const moreOptionsRef = useRef<HTMLDivElement>(null);
 
   const isIntentionEmpty = useCallback((intention: Intention) => {
     return intention.url.trim() === '';
@@ -87,6 +89,17 @@ const SettingsTab = memo(() => {
         intention => !isIntentionEmpty(intention)
       );
       setShowExamples(nonEmptyIntentions.length < 2);
+
+      // Auto-focus first empty intention URL
+      const firstEmptyIndex = initialIntentions.findIndex(
+        intention =>
+          intention.url.trim() === '' && intention.phrase.trim() === ''
+      );
+      if (firstEmptyIndex !== -1) {
+        setTimeout(() => {
+          urlInputRefs.current[firstEmptyIndex]?.focus();
+        }, 100);
+      }
     });
   }, []);
 
@@ -97,6 +110,23 @@ const SettingsTab = memo(() => {
       debouncedSave(intentions);
     }
   }, [intentions, debouncedSave]);
+
+  // Close more options dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        moreOptionsRef.current &&
+        !moreOptionsRef.current.contains(event.target as Node)
+      ) {
+        setShowMoreOptions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const update = async () => {
     await saveIntentions(intentions);
@@ -171,35 +201,51 @@ const SettingsTab = memo(() => {
   };
 
   const handlePhraseBlur = (intentionIndex: number) => {
-    const intention = intentions[intentionIndex];
-    const isLastIntention = intentionIndex === intentions.length - 1;
-    const intentionHasContent =
-      intention.url.trim() !== '' || intention.phrase.trim() !== '';
+    // Remove auto-adding on blur since we handle it in keydown
+    // This was causing conflicts with tab navigation
+  };
 
-    // If this is the last intention and has content, add a new empty intention
-    if (isLastIntention && intentionHasContent) {
-      setIntentions(prev => {
-        const newIntentions = [...prev, { url: '', phrase: '' }];
-        // Focus the new intention's URL input
-        focusNewIntentionUrl(newIntentions.length - 1);
-        return newIntentions;
-      });
+  const handlePhraseKeyDown = (
+    e: React.KeyboardEvent,
+    intentionIndex: number
+  ) => {
+    // Only add new intention on unmodified Tab key (not shift+tab)
+    if (
+      e.key === 'Tab' &&
+      !e.ctrlKey &&
+      !e.altKey &&
+      !e.metaKey &&
+      !e.shiftKey
+    ) {
+      const intention = intentions[intentionIndex];
+      const isLastIntention = intentionIndex === intentions.length - 1;
+      const intentionHasContent =
+        intention.url.trim() !== '' || intention.phrase.trim() !== '';
+
+      if (isLastIntention && intentionHasContent) {
+        e.preventDefault();
+        setIntentions(prev => {
+          const newIntentions = [...prev, { url: '', phrase: '' }];
+          // Focus the new intention's URL input
+          focusNewIntentionUrl(newIntentions.length - 1);
+          return newIntentions;
+        });
+      }
     }
   };
 
   const exampleIntentions = [
     {
-      url: 'gmail.com',
-      phrase: 'I am not checking my email out of habit/boredom',
-    },
-    {
       url: 'reddit.com',
-      phrase: 'I am looking up something I need, I am not rabbit holeing',
+      phrase: 'I want to access something specific',
     },
     {
       url: 'facebook.com',
-      phrase:
-        'I am entering facebook to check events, not doomscroll newsfeeds',
+      phrase: 'I want to use events/chat, and have set a 5 minute timer',
+    },
+    {
+      url: 'gmail.com',
+      phrase: 'I am not checking my email out of habit/boredom',
     },
   ];
 
@@ -303,50 +349,57 @@ const SettingsTab = memo(() => {
     <div className='settings-tab'>
       <h2>Website Intentions</h2>
       <p className='description'>
-        Set up websites where you'd like to pause and reflect before visiting.
-        Add the URL pattern and a phrase that helps you remember your intention.
+        Set intentions for websites, to help yourself use them wisely. Later,
+        when you navigate to these sites, you will get a chance to reaffirm your
+        intention before entering.
       </p>
 
       <div className='intentions-list'>
         {intentions.map((intention, i) => (
           <div key={i} className='intention-item'>
             <div className='intention-inputs'>
-              <input
-                ref={el => {
-                  urlInputRefs.current[i] = el;
-                }}
-                className='url-input'
-                placeholder='URL pattern (e.g., google.com)'
-                value={intention.url}
-                onChange={e => {
-                  const copy = [...intentions];
-                  copy[i].url = e.target.value;
-                  setIntentions(copy);
-                }}
-              />
-              <textarea
-                className='phrase-input'
-                placeholder='Phrase to type'
-                value={intention.phrase}
-                maxLength={150}
-                rows={2}
-                onChange={e => {
-                  const copy = [...intentions];
-                  copy[i].phrase = e.target.value;
-                  setIntentions(copy);
-                }}
-                onBlur={() => handlePhraseBlur(i)}
-              />
+              <div className='input-group'>
+                <input
+                  ref={el => {
+                    urlInputRefs.current[i] = el;
+                  }}
+                  className='url-input'
+                  placeholder=' '
+                  value={intention.url}
+                  onChange={e => {
+                    const copy = [...intentions];
+                    copy[i].url = e.target.value;
+                    setIntentions(copy);
+                  }}
+                />
+                <label className='input-label'>Website URL</label>
+              </div>
+              <div className='input-group'>
+                <textarea
+                  className='phrase-input'
+                  placeholder=' '
+                  value={intention.phrase}
+                  maxLength={150}
+                  rows={2}
+                  onChange={e => {
+                    const copy = [...intentions];
+                    copy[i].phrase = e.target.value;
+                    setIntentions(copy);
+                  }}
+                  onBlur={() => handlePhraseBlur(i)}
+                  onKeyDown={e => handlePhraseKeyDown(e, i)}
+                />
+                <label className='input-label'>Intention Phrase</label>
+              </div>
             </div>
-            <div className='intention-actions'>
-              <button
-                className='remove-btn'
-                onClick={() => remove(i)}
-                title='Remove intention'
-              >
-                ×
-              </button>
-            </div>
+            <button
+              className='remove-btn'
+              onClick={() => remove(i)}
+              title='Remove intention'
+              tabIndex={-1}
+            >
+              ×
+            </button>
           </div>
         ))}
       </div>
@@ -357,17 +410,30 @@ const SettingsTab = memo(() => {
           onClick={addIntention}
           title='Add another intention'
         >
-          Add Intention
+          Add Site
         </button>
         <button className='save-btn' onClick={update}>
-          Save Changes
+          Save
         </button>
-        <button className='export-btn' onClick={exportIntentions}>
-          Export
-        </button>
-        <button className='import-btn' onClick={importIntentions}>
-          Import
-        </button>
+        <div className='more-options' ref={moreOptionsRef}>
+          <button
+            className='more-options-btn'
+            onClick={() => setShowMoreOptions(!showMoreOptions)}
+            title='More options'
+          >
+            ⋯
+          </button>
+          <div
+            className={`more-options-dropdown ${showMoreOptions ? 'show' : ''}`}
+          >
+            <button className='dropdown-item' onClick={exportIntentions}>
+              Export Intentions
+            </button>
+            <button className='dropdown-item' onClick={importIntentions}>
+              Import Intentions
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Example Intentions */}
@@ -399,82 +465,21 @@ const SettingsTab = memo(() => {
 
       {/* Delete Confirmation Dialog */}
       {deleteConfirm.show && (
-        <div
-          className='confirmation-overlay'
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-          onClick={cancelDelete}
-        >
+        <div className='confirmation-overlay' onClick={cancelDelete}>
           <div
             className='confirmation-dialog'
-            style={{
-              backgroundColor: 'white',
-              padding: '24px',
-              borderRadius: '8px',
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-              maxWidth: '400px',
-              width: '90%',
-            }}
             onClick={e => e.stopPropagation()}
           >
-            <h3
-              style={{
-                margin: '0 0 16px 0',
-                fontSize: '18px',
-                fontWeight: '600',
-              }}
-            >
-              Delete Rule
-            </h3>
-            <p
-              style={{ margin: '0 0 24px 0', color: '#666', lineHeight: '1.5' }}
-            >
-              Are you sure you want to delete this rule? This action cannot be
-              undone.
+            <h3>Delete Intention</h3>
+            <p>
+              Are you sure you want to delete this intention? This action cannot
+              be undone.
             </p>
-            <div
-              className='confirmation-actions'
-              style={{
-                display: 'flex',
-                gap: '12px',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <button
-                className='cancel-btn'
-                onClick={cancelDelete}
-                style={{
-                  padding: '8px 16px',
-                  border: '1px solid #ddd',
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
+            <div className='confirmation-actions'>
+              <button className='cancel-btn' onClick={cancelDelete}>
                 Cancel
               </button>
-              <button
-                className='confirm-btn'
-                onClick={confirmDelete}
-                style={{
-                  padding: '8px 16px',
-                  border: 'none',
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
+              <button className='confirm-btn' onClick={confirmDelete}>
                 Delete
               </button>
             </div>
@@ -496,7 +501,7 @@ const SettingsTab = memo(() => {
             fontSize: '14px',
             fontWeight: '500',
             zIndex: 2000,
-            backgroundColor: toast.type === 'success' ? '#28a745' : '#dc3545',
+            backgroundColor: toast.type === 'success' ? '#9E8E33' : '#FE621D',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
             animation: 'slideIn 0.3s ease-out',
           }}
@@ -561,6 +566,7 @@ const Sidebar = memo(
   }) => (
     <div className='sidebar'>
       <div className='sidebar-header'>
+        <div className='logo'></div>
         <h1>Intender</h1>
       </div>
       <nav className='sidebar-nav'>

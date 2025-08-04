@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intender Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital@0;1&display=swap" rel="stylesheet">
     <style>
       * {
         margin: 0;
@@ -12,10 +15,10 @@
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-        background: #f5f5f5;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        background: #FEF8EA;
         min-height: 100vh;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
         margin: 0;
         padding: 0;
       }
@@ -23,29 +26,31 @@
       .options-container {
         display: flex;
         min-height: 100vh;
-        background: white;
+        background: #FEF8EA;
       }
-
-
 
       /* Sidebar Styles */
       .sidebar {
         width: 250px;
-        background: #f8f9fa;
-        border-right: 1px solid #e9ecef;
+        background: rgba(255, 255, 255, 0.7);
+        border-right: 1px solid rgba(158, 142, 51, 0.2);
         display: flex;
         flex-direction: column;
+        backdrop-filter: blur(10px);
       }
 
       .sidebar-header {
         padding: 2rem 1.5rem 1rem;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid rgba(158, 142, 51, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
       }
 
       .sidebar-header h1 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
         text-align: center;
       }
 
@@ -59,24 +64,27 @@
         padding: 1rem 1.5rem;
         background: none;
         border: none;
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(48, 51, 46, 0.6);
         font-size: 1rem;
         text-align: left;
         cursor: pointer;
         transition: all 0.3s ease;
         border-left: 3px solid transparent;
+        font-family: 'Inter', sans-serif;
       }
 
       .tab-btn:hover {
-        background: rgba(157, 146, 79, 0.1);
-        color: rgba(0, 0, 0, 0.8);
+        background: rgba(158, 142, 51, 0.1);
+        color: #30332E;
       }
 
       .tab-btn.active {
-        background: rgba(157, 146, 79, 0.15);
-        color: rgba(0, 0, 0, 0.8);
-        border-left-color: #9d924f;
+        background: rgba(158, 142, 51, 0.15);
+        color: #30332E;
+        border-left-color: #9E8E33;
         font-weight: 500;
+        background: rgba(158, 142, 51, 0.2);
+        color: #9E8E33;
       }
 
       /* Content Area */
@@ -90,14 +98,17 @@
       .settings-tab h2 {
         font-size: 1.8rem;
         margin-bottom: 0.5rem;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
       }
 
       .description {
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(48, 51, 46, 0.7);
         margin-bottom: 2rem;
         line-height: 1.6;
         font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
       }
 
       .intentions-list {
@@ -105,68 +116,124 @@
       }
 
       .intention-item {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(158, 142, 51, 0.2);
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: relative;
+        padding: 1.5rem;
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.7);
-        border: 1px solid rgba(157, 146, 79, 0.3);
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
       }
 
       .intention-item:hover {
-        border-color: #9d924f;
-        box-shadow: 0 2px 8px rgba(157, 146, 79, 0.1);
+        border-color: #9E8E33;
+        box-shadow: 0 4px 16px rgba(158, 142, 51, 0.15);
+      }
+
+      .intention-header {
+        display: none;
+      }
+
+      .logo {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #9E8E33, #FEE3A4);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #30332E;
+        font-size: 1.2rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.5rem;
+        background-image: url('./icon/intender-128.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
       }
 
       .intention-inputs {
-        flex: 1;
         display: flex;
+        flex-direction: column;
         gap: 1rem;
+        flex: 1;
+      }
+
+      .input-group {
+        position: relative;
+      }
+
+      .input-label {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        color: rgba(48, 51, 46, 0.6);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0 0.25rem;
+      }
+
+      .input-label.floating {
+        top: -0.5rem;
+        left: 0.5rem;
+        font-size: 0.75rem;
+        color: #9E8E33;
+        font-weight: 500;
       }
 
       .url-input {
-        flex: 1;
+        width: 100%;
         padding: 0.75rem;
-        border: 1px solid rgba(157, 146, 79, 0.3);
-        border-radius: 6px;
+        border: 1px solid rgba(158, 142, 51, 0.3);
+        border-radius: 8px;
         font-size: 0.9rem;
-        transition: border-color 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
-        word-wrap: break-word;
-        word-break: break-all;
-        overflow-wrap: break-word;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        font-family: 'Inter', sans-serif;
       }
 
       .phrase-input {
-        flex: 1;
+        width: 100%;
         padding: 0.75rem;
-        border: 1px solid rgba(157, 146, 79, 0.3);
-        border-radius: 6px;
+        border: 1px solid rgba(158, 142, 51, 0.3);
+        border-radius: 8px;
         font-size: 0.9rem;
-        transition: border-color 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
-        word-wrap: break-word;
-        word-break: break-all;
-        overflow-wrap: break-word;
-        white-space: pre-wrap;
-        min-height: 2.5rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        min-height: 3rem;
         resize: vertical;
-        font-family: inherit;
+        font-family: 'Inter', sans-serif;
         line-height: 1.4;
       }
 
       .url-input:focus,
       .phrase-input:focus {
         outline: none;
-        border-color: #9d924f;
-        box-shadow: 0 0 0 3px rgba(157, 146, 79, 0.1);
+        border-color: #9E8E33;
+        box-shadow: 0 0 0 3px rgba(158, 142, 51, 0.1);
+      }
+
+      .url-input:focus + .input-label,
+      .phrase-input:focus + .input-label,
+      .url-input:not(:placeholder-shown) + .input-label,
+      .phrase-input:not(:placeholder-shown) + .input-label {
+        top: -0.5rem;
+        left: 0.5rem;
+        font-size: 0.75rem;
+        color: #9E8E33;
+        font-weight: 500;
       }
 
       .remove-btn {
-        background: rgba(220, 53, 69, 0.8);
+        background: #FE621D;
         color: white;
         border: none;
         border-radius: 50%;
@@ -178,10 +245,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        font-family: 'Inter', sans-serif;
+        flex-shrink: 0;
+        align-self: center;
       }
 
       .remove-btn:hover {
-        background: rgba(220, 53, 69, 1);
+        background: #e55a1a;
         transform: scale(1.1);
       }
 
@@ -189,89 +259,130 @@
         display: flex;
         gap: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(157, 146, 79, 0.2);
+        border-top: 1px solid rgba(158, 142, 51, 0.2);
       }
 
       .add-btn,
-      .save-btn,
-      .export-btn,
-      .import-btn {
+      .save-btn {
         padding: 0.75rem 1.5rem;
         border: none;
-        border-radius: 6px;
+        border-radius: 12px;
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, rgba(158, 142, 51, 0.8), rgba(158, 142, 51, 0.6));
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(158, 142, 51, 0.4);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       }
 
-      .add-btn {
-        background: rgba(157, 146, 79, 0.8);
-        color: rgba(0, 0, 0, 0.8);
-        border: 2px solid #9d924f;
-      }
-
-      .add-btn:hover {
-        background: rgba(157, 146, 79, 1);
-        transform: translateY(-1px);
-      }
-
-      .save-btn {
-        background: rgba(157, 146, 79, 0.8);
-        color: rgba(0, 0, 0, 0.8);
-        border: 2px solid #9d924f;
-      }
-
+      .add-btn:hover,
       .save-btn:hover {
-        background: rgba(157, 146, 79, 1);
-        transform: translateY(-1px);
+        background: linear-gradient(135deg, rgba(158, 142, 51, 0.9), rgba(158, 142, 51, 0.7));
+        transform: translateY(-1px) scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
 
-
-
-      .export-btn {
-        background: rgba(40, 167, 69, 0.8);
-        color: white;
-        border: 2px solid #28a745;
+      /* More Options Dropdown */
+      .more-options {
+        position: relative;
+        margin-left: auto;
       }
 
-      .export-btn:hover {
-        background: rgba(40, 167, 69, 1);
-        transform: translateY(-1px);
+      .more-options-btn {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(158, 142, 51, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        color: #30332E;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1;
+        min-width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      .import-btn {
-        background: rgba(0, 123, 255, 0.8);
-        color: white;
-        border: 2px solid #007bff;
+      .more-options-btn:hover {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: #9E8E33;
       }
 
-      .import-btn:hover {
-        background: rgba(0, 123, 255, 1);
-        transform: translateY(-1px);
+      .more-options-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(158, 142, 51, 0.3);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        display: none;
+      }
+
+      .more-options-dropdown.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #30332E;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .dropdown-item:hover {
+        background: rgba(158, 142, 51, 0.1);
+      }
+
+      .dropdown-item:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+
+      .dropdown-item:last-child {
+        border-radius: 0 0 8px 8px;
       }
 
       /* Example Intentions */
       .examples-section {
         margin: 2rem 0;
         padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        border: 1px solid rgba(157, 146, 79, 0.2);
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 12px;
+        border: 1px solid rgba(158, 142, 51, 0.2);
+        backdrop-filter: blur(10px);
       }
 
       .examples-section h3 {
         margin: 0 0 0.5rem 0;
         font-size: 1.2rem;
-        color: rgba(0, 0, 0, 0.7);
+        color: #30332E;
         font-weight: 600;
+        font-family: 'Inter', sans-serif;
       }
 
       .examples-description {
         margin: 0 0 1rem 0;
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(48, 51, 46, 0.7);
         font-size: 0.9rem;
         line-height: 1.4;
+        font-family: 'Inter', sans-serif;
       }
 
       .examples-list {
@@ -286,9 +397,15 @@
         justify-content: space-between;
         gap: 1rem;
         padding: 1rem;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 6px;
-        border: 1px solid rgba(157, 146, 79, 0.1);
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        border: 1px solid rgba(158, 142, 51, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .example-item:hover {
+        border-color: rgba(158, 142, 51, 0.3);
+        box-shadow: 0 2px 8px rgba(158, 142, 51, 0.1);
       }
 
       .example-content {
@@ -297,21 +414,22 @@
 
       .example-url {
         font-weight: 600;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
         margin-bottom: 0.25rem;
         font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
       }
 
       .example-phrase {
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(48, 51, 46, 0.7);
         font-size: 0.85rem;
         line-height: 1.4;
-        font-style: italic;
+        font-family: 'Inter', sans-serif;
       }
 
       .quick-add-btn {
-        background: rgba(40, 167, 69, 0.8);
-        color: white;
+        background: linear-gradient(135deg, rgba(158, 142, 51, 0.8), rgba(158, 142, 51, 0.6));
+        color: rgba(255, 255, 255, 0.9);
         border: none;
         border-radius: 50%;
         width: 32px;
@@ -323,11 +441,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       }
 
       .quick-add-btn:hover {
-        background: rgba(40, 167, 69, 1);
+        background: linear-gradient(135deg, rgba(158, 142, 51, 0.9), rgba(158, 142, 51, 0.7));
         transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
 
       /* Toast Animation */
@@ -346,7 +466,9 @@
       .about-tab h2 {
         font-size: 1.8rem;
         margin-bottom: 1rem;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
       }
 
       .about-content {
@@ -356,14 +478,17 @@
       .about-content p {
         margin-bottom: 1rem;
         line-height: 1.6;
-        color: rgba(0, 0, 0, 0.7);
+        color: rgba(48, 51, 46, 0.8);
         font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
       }
 
       .about-content h3 {
         font-size: 1.2rem;
         margin: 1.5rem 0 0.5rem;
-        color: rgba(0, 0, 0, 0.8);
+        color: #30332E;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
       }
 
       .about-content ol,
@@ -374,22 +499,25 @@
 
       .about-content li {
         margin-bottom: 0.5rem;
-        color: rgba(0, 0, 0, 0.7);
+        color: rgba(48, 51, 46, 0.8);
         font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
       }
 
       .version-info {
         margin-top: 2rem;
         padding: 1rem;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-        border-left: 4px solid #9d924f;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        border-left: 4px solid #9E8E33;
+        backdrop-filter: blur(10px);
       }
 
       .version-info p {
         margin-bottom: 0.5rem;
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(48, 51, 46, 0.7);
         font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
       }
 
       /* Responsive Design */
@@ -404,13 +532,13 @@
           align-items: center;
           padding: 0 1rem;
           border-right: none;
-          border-bottom: 1px solid #e9ecef;
+          border-bottom: 1px solid rgba(158, 142, 51, 0.2);
         }
 
         .sidebar-header {
           padding: 1rem;
           border-bottom: none;
-          border-right: 1px solid rgba(157, 146, 79, 0.2);
+          border-right: 1px solid rgba(158, 142, 51, 0.2);
         }
 
         .sidebar-nav {
@@ -429,7 +557,7 @@
 
         .tab-btn.active {
           border-left-color: transparent;
-          border-bottom-color: #9d924f;
+          border-bottom-color: #9E8E33;
         }
 
         .content {
@@ -444,6 +572,87 @@
         .actions {
           flex-direction: column;
         }
+      }
+
+      /* Delete Confirmation Dialog */
+      .confirmation-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+
+      .confirmation-dialog {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        max-width: 400px;
+        width: 90%;
+        border: 1px solid rgba(158, 142, 51, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .confirmation-dialog h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #30332E;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .confirmation-dialog p {
+        margin: 0 0 1.5rem 0;
+        color: rgba(48, 51, 46, 0.8);
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .confirmation-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+      }
+
+      .cancel-btn {
+        padding: 0.75rem 1.5rem;
+        border: 1px solid rgba(158, 142, 51, 0.3);
+        background: rgba(255, 255, 255, 0.9);
+        color: #30332E;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .cancel-btn:hover {
+        background: rgba(255, 255, 255, 1);
+        border-color: #9E8E33;
+      }
+
+      .confirm-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: #FE621D;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .confirm-btn:hover {
+        background: #e55a1a;
+        transform: translateY(-1px);
       }
     </style>
   </head>
