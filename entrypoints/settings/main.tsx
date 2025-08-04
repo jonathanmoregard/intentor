@@ -1,3 +1,4 @@
+import { debounce } from 'lodash-es';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Intention, storage } from '../../components/storage';
@@ -57,6 +58,22 @@ const SettingsTab = memo(() => {
     [isIntentionEmpty]
   );
 
+  // Debounced save function
+  const debouncedSave = useCallback(
+    debounce(async (intentionsToSave: Intention[]) => {
+      try {
+        const cleanIntentions = intentionsToSave.filter(
+          intention => !isIntentionEmpty(intention)
+        );
+        await storage.set({ intentions: cleanIntentions });
+      } catch (error) {
+        console.error('Failed to auto-save intentions:', error);
+        // Don't show toast for auto-save failures, only log them
+      }
+    }, 1000),
+    [isIntentionEmpty]
+  );
+
   useEffect(() => {
     storage.get().then(data => {
       const initialIntentions =
@@ -73,13 +90,13 @@ const SettingsTab = memo(() => {
     });
   }, []);
 
-  // Save intentions whenever they change (except during initial load)
+  // Debounced auto-save whenever intentions change (except during initial load)
   useEffect(() => {
     // Don't save during initial load (when intentions are empty and we're about to load from storage)
     if (intentions.length > 0) {
-      saveIntentions(intentions);
+      debouncedSave(intentions);
     }
-  }, [intentions, saveIntentions]);
+  }, [intentions, debouncedSave]);
 
   const update = async () => {
     await saveIntentions(intentions);
