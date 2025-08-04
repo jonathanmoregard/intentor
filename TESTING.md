@@ -155,8 +155,8 @@
 
 **Expected Results**:
 
-- If facebook tab is active when duplicating: duplicated tab shows pause page (new tab ID)
-- If facebook tab is not active: duplicated tab shows pause page (new tab ID)
+- If facebook tab is active when duplicating: duplicated tab enter automatically
+- If facebook tab is not active: undefined (whatever is ok)
 - Original tab maintains its state
 - Each tab operates independently based on current state
 
