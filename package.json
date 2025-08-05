@@ -13,6 +13,7 @@
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
+    "prepare": "husky install",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
@@ -29,11 +30,18 @@
     "@types/webextension-polyfill": "^0.12.3",
     "chrome-types": "^0.1.367",
     "fast-check": "^4.2.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0",
     "prettier": "^3.0.0",
     "ts-brand": "^0.2.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
     "wxt": "^0.20.7"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,html,css}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",
