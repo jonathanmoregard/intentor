@@ -1,4 +1,3 @@
-import { type Intention } from '../../components/intention';
 import { storage } from '../../components/storage';
 
 // Particles animation setup
@@ -113,6 +112,7 @@ draw();
 
 const query = new URLSearchParams(window.location.search);
 const target = query.get('target');
+const intentionId = query.get('intention');
 
 const phraseDisplayEl = document.getElementById(
   'phrase-display'
@@ -123,8 +123,9 @@ const helperTextEl = document.getElementById('helper-text') as HTMLElement;
 
 let expectedPhrase = '';
 
-storage.get().then(({ intentions }) => {
-  const match = intentions.find(r => target?.includes(r.url));
+storage.getActiveIntentions().then(parsedIntentions => {
+  // Use intention ID for precise lookup
+  const match = parsedIntentions.find(r => r.id === intentionId);
   if (match) {
     expectedPhrase = match.phrase;
     phraseDisplayEl.textContent = expectedPhrase;

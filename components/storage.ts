@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
-import { Intention } from './intention';
+import { mapNulls } from './helpers';
+import { Intention, ParsedIntention, toParsedIntention } from './intention';
 
 declare const __IS_DEV__: boolean;
 
@@ -12,5 +13,9 @@ export const storage = {
   },
   async set(data: { intentions: Intention[] }) {
     await backend.set(data);
+  },
+  async getActiveIntentions(): Promise<ParsedIntention[]> {
+    const { intentions } = await this.get();
+    return mapNulls(toParsedIntention, intentions);
   },
 };

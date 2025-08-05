@@ -26,3 +26,4 @@
 - Add documentation, security audit
 - Add privacy policy, terms of service
 - Look over format/handling of "url" in intention - currently a bit of a mess
+- **Future**: Consider implementing warning for incomplete intentions (unparseable), making sure user don't leave some in a n unfinished state

@@ -3,7 +3,6 @@ import {
   createIntentionIndex,
   lookupIntention,
   parseUrlToScope,
-  type Intention,
   type IntentionIndex,
 } from '../components/intention';
 import { storage } from '../components/storage';
@@ -27,8 +26,9 @@ export default defineBackground(async () => {
   const intentionPageUrl = browser.runtime.getURL('intention-page.html');
 
   // Load intentions on startup before registering listener to prevent race conditions
-  const { intentions } = await storage.get();
-  intentionIndex = createIntentionIndex(intentions);
+  const parsedIntentions = await storage.getActiveIntentions();
+
+  intentionIndex = createIntentionIndex(parsedIntentions);
 
   browser.webNavigation.onBeforeNavigate.addListener(async details => {
     if (details.frameId !== 0) return;
@@ -98,7 +98,10 @@ export default defineBackground(async () => {
       );
 
       const redirectUrl = browser.runtime.getURL(
-        'intention-page.html?target=' + encodeURIComponent(targetUrl)
+        'intention-page.html?target=' +
+          encodeURIComponent(targetUrl) +
+          '&intention=' +
+          encodeURIComponent(matchedIntention.id)
       );
 
       try {
@@ -111,10 +114,10 @@ export default defineBackground(async () => {
   });
 
   // Refresh cached intentions when storage changes
-  browser.storage.onChanged.addListener(changes => {
+  browser.storage.onChanged.addListener(async changes => {
     if (changes.intentions) {
-      const newIntentions = (changes.intentions.newValue as Intention[]) || [];
-      intentionIndex = createIntentionIndex(newIntentions);
+      const parsedIntentions = await storage.getActiveIntentions();
+      intentionIndex = createIntentionIndex(parsedIntentions);
     }
   });
 });

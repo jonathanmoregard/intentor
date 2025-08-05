@@ -1,17 +1,17 @@
 import {
-  matchesIntentionScope,
-  parseIntention,
+  matchesIntentionScopeIgnoringDomain,
   parseUrlToScope,
-  type Intention,
+  type ParsedIntention,
 } from './components/intention';
+import { generateUUID } from './components/uuid';
 
-// Helper function to create Intention with IntentionScope
-function createIntention(scope: string, phrase: string): Intention {
+// Helper function to create ParsedIntention with IntentionScope
+function createIntention(scope: string, phrase: string): ParsedIntention {
   const parsedScope = parseUrlToScope(scope);
   if (!parsedScope) {
     throw new Error(`Invalid URL: ${scope}`);
   }
-  return { scope: parsedScope, phrase };
+  return { id: generateUUID(), scope: parsedScope, phrase };
 }
 
 // Test the failing case: ["facebook","com",""]
@@ -27,21 +27,20 @@ console.log('Base URL:', baseUrl);
 const intention = createIntention(baseUrl, 'test');
 console.log('Created intention:', intention);
 
-const scope = parseIntention(intention);
+const scope = intention.scope;
 console.log('Parsed scope:', scope);
 
-if (scope) {
-  const wwwUrl = `www.${baseUrl}`;
-  const wwwMatch = matchesIntentionScope(wwwUrl, scope);
-  console.log('WWW URL:', wwwUrl, 'Match:', wwwMatch);
+const wwwUrl = `https://www.${domain}.${suffix}${path}`;
+const wwwMatch = matchesIntentionScopeIgnoringDomain(wwwUrl, scope);
+console.log('WWW URL:', wwwUrl, 'Match:', wwwMatch);
 
-  const langUrl = `sv.${baseUrl}`;
-  const langMatch = matchesIntentionScope(langUrl, scope);
-  console.log('Language URL:', langUrl, 'Match:', langMatch);
+const langUrl = `https://sv.${domain}.${suffix}${path}`;
+const langMatch = matchesIntentionScopeIgnoringDomain(langUrl, scope);
+console.log('Language URL:', langUrl, 'Match:', langMatch);
 
-  const cdnUrl = `cdn.${baseUrl}`;
-  const cdnMatch = matchesIntentionScope(cdnUrl, scope);
-  console.log('CDN URL:', cdnUrl, 'Match:', cdnMatch);
+const cdnUrl = `https://cdn.${domain}.${suffix}${path}`;
+const cdnMatch = matchesIntentionScopeIgnoringDomain(cdnUrl, scope);
+console.log('CDN URL:', cdnUrl, 'Match:', cdnMatch);
 
   console.log('Expected: www=true, lang=true, cdn=false');
   console.log('Actual:', { www: wwwMatch, lang: langMatch, cdn: cdnMatch });

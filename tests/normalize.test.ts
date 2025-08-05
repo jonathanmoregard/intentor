@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeUrl } from '../components/intention';
+import { normalizeUrl } from '../components/normalized-url';
 
 describe('normalizeUrl - Resilience Tests', () => {
   it('should normalize valid URLs correctly', () => {

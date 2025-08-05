@@ -7,27 +7,19 @@
 
 import countries from 'i18n-iso-countries';
 import ISO6391 from 'iso-639-1';
-import normalizeUrlLib from 'normalize-url';
-import { parse } from 'tldts';
 import { Brand } from 'ts-brand';
+import { normalizeUrl, parseUrlString, toComponents } from './normalized-url';
+import { UUID, generateUUID } from './uuid';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-// Branded type for validated normalized URLs
-type NormalizedUrl = Brand<string, 'NormalizedUrl'>;
-
 // Branded type for intention index
 export type IntentionIndex = Brand<
-  Map<string, { scope: IntentionScope; intention: Intention }[]>,
+  Map<string, { scope: IntentionScope; intention: ParsedIntention }[]>,
   'IntentionIndex'
 >;
-
-export interface Intention {
-  scope: IntentionScope;
-  phrase: string;
-}
 
 export interface IntentionScope {
   domain: string; // e.g. "facebook"
@@ -38,128 +30,22 @@ export interface IntentionScope {
   hasLanguageSuffix: boolean; // true if publicSuffix is a language-specific TLD
   hasLanguageSubdomain: boolean; // true if subdomain is a language code
   hasLanguagePathStart: boolean; // true if path starts with a language code
+  originalUrl: string; // the original URL string that was parsed
 }
 
-// ============================================================================
-// URL PARSING AND NORMALIZATION
-// ============================================================================
-
-/**
- * Parses a URL string and returns a URL object if valid.
- * Uses tldts for domain validation and parsing.
- */
-function parseUrlString(input: string): URL | null {
-  const trimmed = input.trim();
-  const parsed = parse(trimmed, { allowPrivateDomains: false });
-
-  if (!parsed.isIcann || !parsed.domain) return null;
-
-  let urlStr = trimmed;
-  if (!/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) {
-    urlStr = 'https://' + trimmed;
-  }
-
-  try {
-    const url = new URL(urlStr);
-    if (!url.hostname || url.hostname !== parsed.hostname) return null;
-    return url;
-  } catch {
-    return null;
-  }
+export interface ParsedIntention {
+  id: UUID; // UUID for unique identification
+  scope: IntentionScope;
+  phrase: string;
 }
 
-/**
- * Normalizes a URL object
- * - Strip protocol (http://, https://)
- * - Remove query parameters and hash fragments
- * - Lowercase the entire string
- * - Strip www subdomains
- * @param url - The parsed URL object to normalize
- * @returns Normalized URL as NormalizedUrl
- */
-export function normalizeUrl(url: URL): NormalizedUrl {
-  const normalized = normalizeUrlLib(url.toString(), {
-    stripProtocol: true,
-    stripWWW: true,
-    removeQueryParameters: true,
-    stripHash: true,
-    removeTrailingSlash: true,
-    removeSingleSlash: true,
-  });
-
-  // Additional validation: ensure it looks like a domain
-  if (
-    !normalized.includes('.') ||
-    normalized.startsWith('.') ||
-    normalized.endsWith('.')
-  ) {
-    throw new Error('Invalid domain format');
-  }
-
-  return normalized as NormalizedUrl;
+export interface UnparsedIntention {
+  url: string;
+  phrase: string;
 }
 
-/**
- * Parses a normalized URL into components for matching.
- */
-export function parseUrl(normalizedUrl: NormalizedUrl): {
-  domain: string;
-  publicSuffix: string;
-  subdomain: string | null;
-  path: string;
-} {
-  try {
-    // Add protocol if missing for URL constructor
-    const urlWithProtocol = normalizedUrl.startsWith('http')
-      ? normalizedUrl
-      : `https://${normalizedUrl}`;
-
-    const parsedUrl = new URL(urlWithProtocol);
-    const { domain, publicSuffix, subdomain } = parse(parsedUrl.hostname);
-
-    return {
-      domain: domain || '',
-      publicSuffix: publicSuffix || '',
-      subdomain: subdomain || null,
-      path: parsedUrl.pathname === '/' ? '' : parsedUrl.pathname,
-    };
-  } catch {
-    // Fallback to manual parsing for edge cases
-    const [hostAndPath, ...rest] = normalizedUrl.split('/');
-    const path = rest.length > 0 ? '/' + rest.join('/') : '';
-
-    const hostParts = hostAndPath.split('.');
-
-    if (hostParts.length === 1) {
-      return {
-        domain: hostParts[0],
-        publicSuffix: '',
-        subdomain: null,
-        path,
-      };
-    }
-
-    if (hostParts.length === 2) {
-      return {
-        domain: hostParts[0],
-        publicSuffix: hostParts[1],
-        subdomain: null,
-        path,
-      };
-    }
-
-    const publicSuffix = hostParts[hostParts.length - 1];
-    const domain = hostParts[hostParts.length - 2];
-    const subdomain = hostParts.slice(0, -2).join('.');
-
-    return {
-      domain,
-      publicSuffix,
-      subdomain: subdomain || null,
-      path,
-    };
-  }
-}
+// Union type for heterogeneous intentions
+export type Intention = ParsedIntention | UnparsedIntention;
 
 // ============================================================================
 // LANGUAGE DETECTION
@@ -235,7 +121,7 @@ export function parseUrlToScope(urlString: string): IntentionScope | null {
     return null;
   }
   const normalizedUrl = normalizeUrl(parsedUrl);
-  const { domain, publicSuffix, subdomain, path } = parseUrl(normalizedUrl);
+  const { domain, publicSuffix, subdomain, path } = toComponents(normalizedUrl);
 
   // Check for language parts
   const hasLanguageSubdomain = subdomain ? isLanguageCode(subdomain) : false;
@@ -252,15 +138,100 @@ export function parseUrlToScope(urlString: string): IntentionScope | null {
     hasLanguageSuffix,
     hasLanguageSubdomain,
     hasLanguagePathStart,
+    originalUrl: urlString,
   };
 }
 
 /**
- * Parses an intention URL into a structured format for matching.
+ * Converts a ParsedIntention to UnparsedIntention
  */
-export function parseIntention(intention: Intention): IntentionScope | null {
-  // Since intention.scope is already an IntentionScope, we can return it directly
-  return intention.scope;
+export function parsedIntentionToUnparsed(
+  intention: ParsedIntention
+): UnparsedIntention {
+  return {
+    url: intention.scope.originalUrl,
+    phrase: intention.phrase,
+  };
+}
+
+/**
+ * Converts any Intention to UnparsedIntention
+ */
+export function intentionToUnparsed(intention: Intention): UnparsedIntention {
+  if ('scope' in intention) {
+    return parsedIntentionToUnparsed(intention);
+  } else {
+    return intention;
+  }
+}
+
+/**
+ * Attempts to convert an UnparsedIntention to Intention.
+ * Returns null if the URL cannot be parsed.
+ */
+export function unparsedToIntention(
+  unparsed: UnparsedIntention
+): Intention | null {
+  const scope = parseUrlToScope(unparsed.url);
+  if (!scope) {
+    return null;
+  }
+  return {
+    id: generateUUID(),
+    scope,
+    phrase: unparsed.phrase,
+  };
+}
+
+/**
+ * Checks if an UnparsedIntention can be parsed successfully.
+ */
+export function canParseIntention(unparsed: UnparsedIntention): boolean {
+  return parseUrlToScope(unparsed.url) !== null;
+}
+
+/**
+ * Converts an Intention to ParsedIntention or null.
+ * Returns the intention if it's already parsed, or tries to parse unparsed intentions.
+ */
+export function toParsedIntention(
+  intention: Intention
+): ParsedIntention | null {
+  if (isParsedIntention(intention)) {
+    return intention;
+  } else {
+    const parsed = unparsedToIntention(intention);
+    return parsed && isParsedIntention(parsed) ? parsed : null;
+  }
+}
+
+// Type guards
+export function isParsedIntention(
+  intention: Intention
+): intention is ParsedIntention {
+  return 'scope' in intention;
+}
+
+export function isUnparsedIntention(
+  intention: Intention
+): intention is UnparsedIntention {
+  return 'url' in intention;
+}
+
+/**
+ * Checks if an intention is empty (no meaningful content).
+ */
+export function isEmpty(intention: Intention): boolean {
+  if (isParsedIntention(intention)) {
+    // Parsed intentions are never empty by definition
+    return false;
+  } else {
+    // For unparsed intentions, check if URL and phrase are empty
+    return (
+      (!intention.url || intention.url.trim() === '') &&
+      (!intention.phrase || intention.phrase.trim() === '')
+    );
+  }
 }
 
 // ============================================================================
@@ -270,14 +241,16 @@ export function parseIntention(intention: Intention): IntentionScope | null {
 /**
  * Creates an index for fast intention lookup by domain.
  */
-export function createIntentionIndex(intentions: Intention[]): IntentionIndex {
+export function createIntentionIndex(
+  intentions: ParsedIntention[]
+): IntentionIndex {
   const index = new Map<
     string,
-    { scope: IntentionScope; intention: Intention }[]
+    { scope: IntentionScope; intention: ParsedIntention }[]
   >();
 
   for (const intention of intentions) {
-    const scope = parseIntention(intention);
+    const scope = intention.scope;
     if (!scope) {
       continue; // Skip invalid intentions
     }
@@ -310,7 +283,7 @@ export function matchesIntentionScopeIgnoringDomain(
     return false;
   }
   const normalizedTarget = normalizeUrl(parsedUrl);
-  const targetParts = parseUrl(normalizedTarget);
+  const targetParts = toComponents(normalizedTarget);
 
   // Step 1: Public Suffix Match
   if (intentionScope.hasLanguageSuffix) {
@@ -387,13 +360,13 @@ export function matchesIntentionScopeIgnoringDomain(
 export function lookupIntention(
   targetUrl: string,
   intentionIndex: IntentionIndex
-): Intention | null {
+): ParsedIntention | null {
   const parsedUrl = parseUrlString(targetUrl);
   if (!parsedUrl) {
     return null;
   }
   const normalizedTarget = normalizeUrl(parsedUrl);
-  const { domain } = parseUrl(normalizedTarget);
+  const { domain } = toComponents(normalizedTarget);
 
   const intentionScopes = intentionIndex.get(domain);
   if (!intentionScopes) {

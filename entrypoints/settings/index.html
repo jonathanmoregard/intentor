@@ -654,6 +654,128 @@
         background: #e55a1a;
         transform: translateY(-1px);
       }
+
+      /* Error styling for unparseable URLs */
+      .url-input.error {
+        border-color: #FE621D;
+        background-color: rgba(254, 98, 29, 0.05);
+      }
+
+      .url-input.error:focus {
+        border-color: #FE621D;
+        box-shadow: 0 0 0 2px rgba(254, 98, 29, 0.2);
+      }
+
+      /* Success styling for parsed URLs */
+      .url-input.parsed {
+        border-color: #9E8E33;
+        background-color: #9E8E33;
+        color: white;
+      }
+
+      .url-input.parsed:focus {
+        border-color: #9E8E33;
+        background-color: #9E8E33;
+        color: white;
+        box-shadow: 0 0 0 2px rgba(158, 142, 51, 0.2);
+      }
+
+      .url-input.parsed::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* Warning Dialog for Unparseable Intentions */
+      .warning-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+
+      .warning-dialog {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        max-width: 500px;
+        width: 90%;
+        border: 1px solid rgba(254, 98, 29, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .warning-dialog h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #30332E;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .warning-dialog p {
+        margin: 0 0 1.5rem 0;
+        color: rgba(48, 51, 46, 0.8);
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .unparseable-list {
+        margin: 0 0 1.5rem 0;
+        padding: 0;
+        list-style: none;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .unparseable-item {
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        background: rgba(254, 98, 29, 0.1);
+        border: 1px solid rgba(254, 98, 29, 0.2);
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .unparseable-url {
+        font-weight: 600;
+        color: #FE621D;
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+      }
+
+      .unparseable-phrase {
+        color: rgba(48, 51, 46, 0.7);
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+
+      .warning-dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .warning-dialog-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: #FE621D;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .warning-dialog-btn:hover {
+        background: #e55a1a;
+        transform: translateY(-1px);
+      }
     </style>
   </head>
   <body>

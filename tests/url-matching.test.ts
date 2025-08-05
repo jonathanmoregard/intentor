@@ -4,11 +4,11 @@ import {
   createIntentionIndex,
   lookupIntention,
   matchesIntentionScopeIgnoringDomain,
-  normalizeUrl,
-  parseIntention,
   parseUrlToScope,
-  type Intention,
+  type ParsedIntention,
 } from '../components/intention';
+import { normalizeUrl } from '../components/normalized-url';
+import { generateUUID } from '../components/uuid';
 
 describe('Intender URL Matching - Test Specification', () => {
   // Test data generators
@@ -29,14 +29,27 @@ describe('Intender URL Matching - Test Specification', () => {
     '/docs'
   );
 
-  // Helper function to create Intention with IntentionScope
-  function createIntention(scope: string, phrase: string): Intention {
+  // Helper function to create ParsedIntention with IntentionScope
+  function createIntention(scope: string, phrase: string): ParsedIntention {
     const parsedScope = parseUrlToScope(scope);
     if (!parsedScope) {
       throw new Error(`Invalid URL: ${scope}`);
     }
-    return { scope: parsedScope, phrase };
+    return { id: generateUUID(), scope: parsedScope, phrase };
   }
+
+  // Test scope creation for the gmail.com.com issue
+  describe('Scope Creation', () => {
+    it('should correctly separate domain and publicSuffix for gmail.com', () => {
+      const scope = parseUrlToScope('gmail.com');
+      expect(scope).not.toBeNull();
+      // tldts uses domain="registrableDomain" which includes the public suffix
+      expect(scope!.domain).toBe('gmail.com');
+      expect(scope!.publicSuffix).toBe('com');
+      expect(scope!.subdomain).toBeNull();
+      expect(scope!.path).toBe('');
+    });
+  });
 
   // Use a more restrictive URL generator with known valid domains
   const validUrlArb = fc
@@ -88,7 +101,7 @@ describe('Intender URL Matching - Test Specification', () => {
               intention.scope,
               intention.phrase
             );
-            const scope = parseIntention(intentionObj);
+            const scope = intentionObj.scope;
             if (!scope) return true; // Skip invalid intentions
             return matchesIntentionScopeIgnoringDomain(intention.scope, scope);
           } catch {
@@ -106,7 +119,7 @@ describe('Intender URL Matching - Test Specification', () => {
         fc.property(domainArb, suffixArb, pathArb, (domain, suffix, path) => {
           const baseUrl = `https://${domain}.${suffix}${path}`;
           const intention = createIntention(baseUrl, 'test');
-          const scope = parseIntention(intention);
+          const scope = intention.scope;
           if (!scope) return true; // Skip invalid intentions
 
           const wwwUrl = `https://www.${domain}.${suffix}${path}`;
@@ -128,7 +141,7 @@ describe('Intender URL Matching - Test Specification', () => {
         fc.property(domainArb, suffixArb, pathArb, (domain, suffix, path) => {
           const baseUrl = `https://${domain}.${suffix}${path}`;
           const intention = createIntention(baseUrl, 'test');
-          const scope = parseIntention(intention);
+          const scope = intention.scope;
           if (!scope) return true; // Skip invalid intentions
 
           // Test that language subdomains are stripped and matched
@@ -157,7 +170,7 @@ describe('Intender URL Matching - Test Specification', () => {
           // Create iURL with language subdomain
           const langIUrl = `https://sv.${domain}.${suffix}${path}`;
           const intention = createIntention(langIUrl, 'test');
-          const scope = parseIntention(intention);
+          const scope = intention.scope;
           if (!scope) return true; // Skip invalid intentions
 
           // Test that target URLs without language subdomain match
@@ -183,7 +196,7 @@ describe('Intender URL Matching - Test Specification', () => {
     it('should handle public suffixes correctly', () => {
       // Test language suffix (.se) matches any suffix
       const seIntention = createIntention('https://facebook.se', 'test');
-      const seScope = parseIntention(seIntention);
+      const seScope = seIntention.scope;
       if (!seScope) throw new Error('Failed to parse intention');
 
       const comMatch = matchesIntentionScopeIgnoringDomain(
@@ -205,7 +218,7 @@ describe('Intender URL Matching - Test Specification', () => {
 
       // Test non-language suffix (.com) matches same suffix or language suffixes
       const comIntention = createIntention('https://facebook.com', 'test');
-      const comScope = parseIntention(comIntention);
+      const comScope = comIntention.scope;
       if (!comScope) throw new Error('Failed to parse intention');
 
       const comMatch2 = matchesIntentionScopeIgnoringDomain(
@@ -233,7 +246,7 @@ describe('Intender URL Matching - Test Specification', () => {
         fc.property(domainArb, domain => {
           const langSpecificUrl = `https://sv.${domain}.com`;
           const intention = createIntention(langSpecificUrl, 'test');
-          const scope = parseIntention(intention);
+          const scope = intention.scope;
           if (!scope) return true; // Skip invalid intentions
 
           const differentLangUrl = `https://fr.${domain}.com`;
@@ -267,7 +280,7 @@ describe('Intender URL Matching - Test Specification', () => {
   describe('7. Internal Navigation Exemption', () => {
     it('should match URLs within the same scope', () => {
       const intention = createIntention('https://facebook.com/groups', 'test');
-      const scope = parseIntention(intention);
+      const scope = intention.scope;
       if (!scope) throw new Error('Failed to parse intention');
 
       const variantUrl = 'https://sv.facebook.com/groups/123';
@@ -292,7 +305,7 @@ describe('Intender URL Matching - Test Specification', () => {
           (domain, suffix, basePath, extra) => {
             const intentionUrl = `https://${domain}.${suffix}${basePath}`;
             const intention = createIntention(intentionUrl, 'test');
-            const scope = parseIntention(intention);
+            const scope = intention.scope;
             if (!scope) return true; // Skip invalid intentions
 
             // Construct a valid URL by adding a slash before the extra path
