@@ -323,10 +323,13 @@ describe('Intender URL Matching - Test Specification', () => {
   describe('Language Path Matching', () => {
     it('should match language paths correctly in all combinations', () => {
       // Test case 1: intention with language path matches target with language path
-      const intention1 = createIntention('https://foo.com/en/trepeneur/', 'test1');
+      const intention1 = createIntention(
+        'https://foo.com/en/trepeneur/',
+        'test1'
+      );
       const scope1 = intention1.scope;
       if (!scope1) throw new Error('Failed to parse intention1');
-      
+
       const target1a = 'https://foo.com/en/trepeneur';
       const match1a = matchesIntentionScopeIgnoringDomain(target1a, scope1);
       expect(match1a).toBe(true);
@@ -340,10 +343,38 @@ describe('Intender URL Matching - Test Specification', () => {
       const intention2 = createIntention('https://foo.com/trepeneur/', 'test2');
       const scope2 = intention2.scope;
       if (!scope2) throw new Error('Failed to parse intention2');
-      
+
       const target2 = 'https://foo.com/en/trepeneur';
       const match2 = matchesIntentionScopeIgnoringDomain(target2, scope2);
       expect(match2).toBe(true);
+    });
+  });
+
+  describe('Language-Specific TLD Matching', () => {
+    it('should match facebook.com intention with facebook.se target', () => {
+      // Create intention with .com (non-language suffix)
+      const intention = createIntention('https://facebook.com', 'facebook');
+      const scope = intention.scope;
+      if (!scope) throw new Error('Failed to parse intention');
+
+      // Target with .se (language-specific suffix - Sweden)
+      const target = 'https://facebook.se';
+      const match = matchesIntentionScopeIgnoringDomain(target, scope);
+
+      expect(match).toBe(true);
+    });
+
+    it('should match facebook.se intention with facebook.com target', () => {
+      // Create intention with .se (language-specific suffix)
+      const intention = createIntention('https://facebook.se', 'facebook');
+      const scope = intention.scope;
+      if (!scope) throw new Error('Failed to parse intention');
+
+      // Target with .com (non-language suffix)
+      const target = 'https://facebook.com';
+      const match = matchesIntentionScopeIgnoringDomain(target, scope);
+
+      expect(match).toBe(true);
     });
   });
 
