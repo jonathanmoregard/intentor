@@ -26,3 +26,4 @@
 - Add documentation, security audit
 - Add privacy policy, terms of service
 - Consider implementing warning for incomplete intentions (unparseable), making sure user don't leave some in a n unfinished state
+- handle race conditions in backgroundworker (https://chatgpt.com/share/6892069c-0914-8003-bbb4-1246d44fa1fd)

@@ -53,10 +53,14 @@ export default defineBackground(async () => {
     // Development logging
     console.log('[Intender] Navigation check:', {
       targetUrl,
-      sourceUrl,
+      sourceUrl: sourceUrl || 'null',
+      sourceTabId: details.tabId,
+      sourceTabExists: !!sourceTab,
       navigationTabId,
       activeTabId,
-      activeTabUrl,
+      activeTabUrl: activeTabUrl || 'null',
+      isNavigationTabActive,
+      frameId: details.frameId,
     });
 
     // Rule 1: If navigating from same domain → same domain, allow
