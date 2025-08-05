@@ -9,6 +9,9 @@ import {
 } from '../components/intention';
 import { storage } from '../components/storage';
 
+// Tab URL cache to track last-known URLs for each tab
+const tabUrlMap = new Map<number, string>();
+
 const getDomain = (input: string): string => {
   const parsed = parseUrlToScope(input);
   return parsed?.domain || '';
@@ -28,21 +31,62 @@ export default defineBackground(async () => {
   const intentionPageUrl = browser.runtime.getURL('intention-page.html');
 
   // Load intentions on startup before registering listener to prevent race conditions
-  const { intentions } = await storage.get();
-  const parsedIntentions = mapNulls(parseIntention, intentions);
+  try {
+    const { intentions } = await storage.get();
+    const parsedIntentions = mapNulls(parseIntention, intentions);
+    intentionIndex = createIntentionIndex(parsedIntentions);
+  } catch (error) {
+    console.error('[Intender] Failed to load intentions on startup:', error);
+  }
 
-  intentionIndex = createIntentionIndex(parsedIntentions);
+  // Track new tabs to initialize cache
+  browser.tabs.onCreated.addListener(tab => {
+    if (tab.id !== undefined && typeof tab.url === 'string') {
+      tabUrlMap.set(tab.id, tab.url);
+      console.log('[Intender] Tab created, cached URL:', {
+        tabId: tab.id,
+        url: tab.url,
+      });
+    }
+  });
+
+  // Update cache when navigation is committed (reliable source of truth)
+  browser.webNavigation.onCommitted.addListener(details => {
+    if (details.frameId === 0) {
+      // Only track main frame navigation
+      tabUrlMap.set(details.tabId, details.url);
+      console.log('[Intender] Navigation committed, updated cache:', {
+        tabId: details.tabId,
+        url: details.url,
+      });
+    }
+  });
+
+  // Clean up cache when tabs are removed
+  browser.tabs.onRemoved.addListener(tabId => {
+    tabUrlMap.delete(tabId);
+    console.log('[Intender] Tab removed, cleared cache:', { tabId });
+  });
 
   browser.webNavigation.onBeforeNavigate.addListener(async details => {
     if (details.frameId !== 0) return;
 
     const targetUrl = details.url;
+    const sourceUrl = tabUrlMap.get(details.tabId) || null;
 
-    // Get active tab and source tab in parallel for performance
-    const [activeTabs, sourceTab] = await Promise.all([
-      browser.tabs.query({ active: true, currentWindow: true }),
-      browser.tabs.get(details.tabId).catch(() => null),
-    ]);
+    let activeTabs: browser.Tabs.Tab[];
+    try {
+      activeTabs = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+    } catch (error) {
+      console.log(
+        '[Intender] Failed to query active tabs, treating as different tab:',
+        error
+      );
+      activeTabs = [];
+    }
 
     const navigationTabId = details.tabId;
     const activeTabId = activeTabs[0]?.id;
@@ -51,14 +95,12 @@ export default defineBackground(async () => {
     // If no active tab (window unfocused), treat as different tab to be safe
     const isNavigationTabActive =
       activeTabId === navigationTabId && activeTabs.length > 0;
-    const sourceUrl = sourceTab?.url;
 
     // Development logging
     console.log('[Intender] Navigation check:', {
       targetUrl,
       sourceUrl: sourceUrl || 'null',
       sourceTabId: details.tabId,
-      sourceTabExists: !!sourceTab,
       navigationTabId,
       activeTabId,
       activeTabUrl: activeTabUrl || 'null',
@@ -84,7 +126,7 @@ export default defineBackground(async () => {
     // - Duplicating Facebook tab (active tab is Facebook) → navigating within Facebook
     // - Middle-click link from Facebook (active tab is Facebook) → opening Facebook link
     // The !== check is to avoid allowing everything. Without it,
-    // navigation that is happeing in the active tab would always pass
+    // navigation that is happening in the active tab would always pass
 
     if (
       !isNavigationTabActive &&
@@ -123,9 +165,13 @@ export default defineBackground(async () => {
   // Refresh cached intentions when storage changes
   browser.storage.onChanged.addListener(async changes => {
     if (changes.intentions) {
-      const { intentions } = await storage.get();
-      const parsedIntentions = mapNulls(parseIntention, intentions);
-      intentionIndex = createIntentionIndex(parsedIntentions);
+      try {
+        const { intentions } = await storage.get();
+        const parsedIntentions = mapNulls(parseIntention, intentions);
+        intentionIndex = createIntentionIndex(parsedIntentions);
+      } catch (error) {
+        console.error('[Intender] Failed to refresh intention index:', error);
+      }
     }
   });
 });
