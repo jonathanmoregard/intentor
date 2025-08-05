@@ -1,4 +1,4 @@
-# TODO
+# TODO (For Humans) - AI kept using as scratchpad before name change
 
 ## Revenue & Marketing
 
