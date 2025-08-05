@@ -123,9 +123,9 @@ const helperTextEl = document.getElementById('helper-text') as HTMLElement;
 
 let expectedPhrase = '';
 
-storage.getActiveIntentions().then(parsedIntentions => {
+storage.get().then(({ intentions }) => {
   // Use intention ID for precise lookup
-  const match = parsedIntentions.find(r => r.id === intentionId);
+  const match = intentions.find(r => r.id === intentionId);
   if (match) {
     expectedPhrase = match.phrase;
     phraseDisplayEl.textContent = expectedPhrase;

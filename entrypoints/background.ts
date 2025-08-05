@@ -1,7 +1,9 @@
 import browser from 'webextension-polyfill';
+import { mapNulls } from '../components/helpers';
 import {
   createIntentionIndex,
   lookupIntention,
+  parseIntention,
   parseUrlToScope,
   type IntentionIndex,
 } from '../components/intention';
@@ -26,7 +28,8 @@ export default defineBackground(async () => {
   const intentionPageUrl = browser.runtime.getURL('intention-page.html');
 
   // Load intentions on startup before registering listener to prevent race conditions
-  const parsedIntentions = await storage.getActiveIntentions();
+  const { intentions } = await storage.get();
+  const parsedIntentions = mapNulls(parseIntention, intentions);
 
   intentionIndex = createIntentionIndex(parsedIntentions);
 
@@ -120,7 +123,8 @@ export default defineBackground(async () => {
   // Refresh cached intentions when storage changes
   browser.storage.onChanged.addListener(async changes => {
     if (changes.intentions) {
-      const parsedIntentions = await storage.getActiveIntentions();
+      const { intentions } = await storage.get();
+      const parsedIntentions = mapNulls(parseIntention, intentions);
       intentionIndex = createIntentionIndex(parsedIntentions);
     }
   });

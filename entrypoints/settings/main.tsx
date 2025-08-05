@@ -2,26 +2,19 @@ import { debounce } from 'lodash-es';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  type Intention,
-  type UnparsedIntention,
+  type RawIntention,
   canParseIntention,
-  intentionToUnparsed,
+  emptyRawIntention,
   isEmpty,
-  isParsedIntention,
-  isUnparsedIntention,
-  unparsedToIntention,
-  viewScope,
+  makeRawIntention,
 } from '../../components/intention';
 import { storage } from '../../components/storage';
 
 type Tab = 'settings' | 'about';
 
-// Union type for heterogeneous intentions
-type IntentionItem = Intention;
-
 const SettingsTab = memo(
   ({ setActiveTab }: { setActiveTab: (tab: Tab) => void }) => {
-    const [intentions, setIntentions] = useState<IntentionItem[]>([]);
+    const [intentions, setIntentions] = useState<RawIntention[]>([]);
     const [deleteConfirm, setDeleteConfirm] = useState<{
       show: boolean;
       index: number | null;
@@ -89,7 +82,7 @@ const SettingsTab = memo(
     const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const moreOptionsRef = useRef<HTMLDivElement>(null);
 
-    const isIntentionEmpty = useCallback((intention: IntentionItem) => {
+    const isIntentionEmpty = useCallback((intention: RawIntention) => {
       return isEmpty(intention);
     }, []);
 
@@ -101,39 +94,15 @@ const SettingsTab = memo(
     }, []);
 
     const saveIntentions = useCallback(
-      async (intentionsToSave: IntentionItem[]) => {
-        try {
-          // Save all intentions (including empty ones) as heterogeneous data
-          await storage.set({ intentions: intentionsToSave });
-
-          // Check for unparseable intentions for warning dialog
-          const unparseable: UnparsedIntention[] = [];
-
-          for (const item of intentionsToSave) {
-            if (
-              isUnparsedIntention(item) &&
-              !isEmpty(item) &&
-              !canParseIntention(item)
-            ) {
-              unparseable.push(item);
-            }
-          }
-        } catch (error) {
-          console.error('Failed to save intentions:', error);
-          setToast({
-            show: true,
-            message: 'Failed to save intentions. Please try again.',
-            type: 'error',
-          });
-          setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-        }
+      async (intentionsToSave: RawIntention[]) => {
+        await storage.set({ intentions: intentionsToSave });
       },
       []
     );
 
     // Debounced save function
     const debouncedSave = useCallback(
-      debounce(async (intentionsToSave: IntentionItem[]) => {
+      debounce(async (intentionsToSave: RawIntention[]) => {
         try {
           await saveIntentions(intentionsToSave);
         } catch (error) {
@@ -147,9 +116,7 @@ const SettingsTab = memo(
     useEffect(() => {
       storage.get().then(data => {
         const initialIntentions =
-          data.intentions.length > 0
-            ? data.intentions
-            : [{ url: '', phrase: '' }];
+          data.intentions.length > 0 ? data.intentions : [emptyRawIntention()];
         setIntentions(initialIntentions);
 
         // Track which intentions were loaded from storage (not newly created)
@@ -169,8 +136,8 @@ const SettingsTab = memo(
 
         // Auto-focus first empty unparseable intention URL
         const firstEmptyIndex = initialIntentions.findIndex(
-          (intention: IntentionItem) => {
-            return isUnparsedIntention(intention) && isEmpty(intention);
+          (intention: RawIntention) => {
+            return isEmpty(intention);
           }
         );
         if (firstEmptyIndex !== -1) {
@@ -222,13 +189,13 @@ const SettingsTab = memo(
 
       // Ensure we always have at least one intention (empty if needed)
       setIntentions(
-        cleanIntentions.length > 0 ? cleanIntentions : [{ url: '', phrase: '' }]
+        cleanIntentions.length > 0 ? cleanIntentions : [emptyRawIntention()]
       );
     };
 
     const addIntention = () => {
       setIntentions(prev => {
-        const newIntentions = [...prev, { url: '', phrase: '' }];
+        const newIntentions = [...prev, emptyRawIntention()];
         // Focus the new intention's URL input
         focusNewIntentionUrl(newIntentions.length - 1);
         return newIntentions;
@@ -238,11 +205,10 @@ const SettingsTab = memo(
 
     const addExampleIntention = (example: { url: string; phrase: string }) => {
       setIntentions(prev => {
-        const newIntention: UnparsedIntention = {
-          url: example.url,
-          phrase: example.phrase,
-        };
-        const newIntentions = [...prev, newIntention];
+        const newIntentions = [
+          ...prev,
+          makeRawIntention(example.url, example.phrase),
+        ];
         // Focus the new intention's URL input
         focusNewIntentionUrl(newIntentions.length - 1);
         return newIntentions;
@@ -268,7 +234,7 @@ const SettingsTab = memo(
       const newIntentions = intentions.filter((_, i) => i !== index);
       // Ensure we always have at least one intention (empty if needed)
       const finalIntentions =
-        newIntentions.length > 0 ? newIntentions : [{ url: '', phrase: '' }];
+        newIntentions.length > 0 ? newIntentions : [emptyRawIntention()];
       setIntentions(finalIntentions);
 
       // Update loaded indices after deletion
@@ -323,7 +289,7 @@ const SettingsTab = memo(
         if (isLastIntention && intentionHasContent) {
           e.preventDefault();
           setIntentions(prev => {
-            const newIntentions = [...prev, { url: '', phrase: '' }];
+            const newIntentions = [...prev, emptyRawIntention()];
             // Focus the new intention's URL input
             focusNewIntentionUrl(newIntentions.length - 1);
             return newIntentions;
@@ -348,111 +314,58 @@ const SettingsTab = memo(
     ];
 
     const exportIntentions = () => {
-      try {
-        const cleanIntentions = intentions.filter(
-          intention => !isEmpty(intention)
-        );
+      const nonemptyIntentions = intentions.filter(
+        intention => !isEmpty(intention)
+      );
 
-        if (cleanIntentions.length === 0) {
-          setToast({
-            show: true,
-            message: 'No intentions to export. Add some intentions first.',
-            type: 'error',
-          });
-          setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-          return;
-        }
+      const dataStr = JSON.stringify(nonemptyIntentions, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
 
-        // Convert to UnparsedIntention format for export
-        const unparsedIntentions: UnparsedIntention[] = cleanIntentions.map(
-          intention => intentionToUnparsed(intention)
-        );
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'intender-intentions.json';
+      link.click();
+      URL.revokeObjectURL(url);
 
-        const dataStr = JSON.stringify(unparsedIntentions, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'intentions.json';
-        link.click();
-        URL.revokeObjectURL(url);
-
-        setToast({
-          show: true,
-          message: `Successfully exported ${cleanIntentions.length} intention(s)`,
-          type: 'success',
-        });
-        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-      } catch (error) {
-        console.error('Export failed:', error);
-        setToast({
-          show: true,
-          message: 'Failed to export intentions. Please try again.',
-          type: 'error',
-        });
-        setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-      }
+      setToast({
+        show: true,
+        message: `Exported ${nonemptyIntentions.length} intention(s)`,
+        type: 'success',
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
     };
 
     const importIntentions = () => {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.json';
-      input.onchange = e => {
+      input.onchange = async e => {
         const file = (e.target as HTMLInputElement).files?.[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = e => {
-            try {
-              const importedUnparsedIntentions = JSON.parse(
-                e.target?.result as string
-              );
-              if (Array.isArray(importedUnparsedIntentions)) {
-                // Convert to heterogeneous list
-                const importedIntentions: IntentionItem[] =
-                  importedUnparsedIntentions.map((item: any) => {
-                    // Try to parse each intention
-                    const parsed = unparsedToIntention(item);
-                    return parsed || item; // Return parsed if successful, otherwise keep as unparsed
-                  });
+        if (!file) return;
 
-                setIntentions(importedIntentions);
-                setToast({
-                  show: true,
-                  message: `Successfully imported ${importedIntentions.length} intention(s)`,
-                  type: 'success',
-                });
-                setTimeout(
-                  () => setToast(prev => ({ ...prev, show: false })),
-                  3000
-                );
-              } else {
-                setToast({
-                  show: true,
-                  message:
-                    'Invalid file format. Please select a valid intentions file.',
-                  type: 'error',
-                });
-                setTimeout(
-                  () => setToast(prev => ({ ...prev, show: false })),
-                  3000
-                );
-              }
-            } catch (error) {
-              console.error('Failed to parse intentions file:', error);
-              setToast({
-                show: true,
-                message:
-                  "Ooops! Couldn't understand the file you picked for import. Are you sure it's the right one?",
-                type: 'error',
-              });
-              setTimeout(
-                () => setToast(prev => ({ ...prev, show: false })),
-                3000
-              );
-            }
-          };
-          reader.readAsText(file);
+        try {
+          const text = await file.text();
+          const importedIntentions: RawIntention[] = JSON.parse(text);
+
+          setIntentions(importedIntentions);
+          await storage.set({ intentions: importedIntentions });
+
+          setToast({
+            show: true,
+            message: `Imported ${importedIntentions.length} intention(s)`,
+            type: 'success',
+          });
+          setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+        } catch (error) {
+          console.error('Import failed:', error);
+          setToast({
+            show: true,
+            message:
+              "Ooops! Couldn't understand the file you picked for import. Are you sure it's the right one?",
+            type: 'error',
+          });
+          setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
         }
       };
       input.click();
@@ -476,79 +389,56 @@ const SettingsTab = memo(
                     ref={el => {
                       urlInputRefs.current[i] = el;
                     }}
+                    type='text'
                     className={`url-input ${
-                      isUnparsedIntention(intention) &&
+                      isBlurred(i) &&
                       !isEmpty(intention) &&
-                      !canParseIntention(intention) &&
-                      intention.url.trim() !== '' &&
-                      (isLoaded(i) || isBlurred(i))
+                      !canParseIntention(intention)
                         ? 'error'
                         : ''
-                    } ${isParsedIntention(intention) ? 'parsed' : ''}`}
-                    placeholder=' '
-                    value={
-                      isParsedIntention(intention)
-                        ? viewScope(intention.scope)
-                        : intention.url
-                    }
+                    } ${
+                      isBlurred(i) && canParseIntention(intention)
+                        ? 'parseable'
+                        : ''
+                    }`}
+                    value={intention.url}
                     onChange={e => {
-                      // Reset blurred state when user starts typing
-                      markFocused(i);
-
-                      const copy = [...intentions];
-                      // Always treat as unparsed during editing
-                      copy[i] = {
-                        url: e.target.value,
-                        phrase: copy[i].phrase,
-                      } as UnparsedIntention;
-                      setIntentions(copy);
+                      const newIntentions = [...intentions];
+                      newIntentions[i] = makeRawIntention(
+                        e.target.value,
+                        newIntentions[i].phrase
+                      );
+                      setIntentions(newIntentions);
                     }}
-                    onFocus={() => {
-                      // Convert parsed intention back to unparsed when focusing
-                      if (isParsedIntention(intention)) {
-                        const copy = [...intentions];
-                        copy[i] = intentionToUnparsed(intention);
-                        setIntentions(copy);
-                      }
-                    }}
-                    onBlur={() => {
-                      // Mark this input as blurred
-                      markBlurred(i);
-
-                      // Try to parse on blur
-                      if (
-                        isUnparsedIntention(intention) &&
-                        intention.url.trim() !== ''
-                      ) {
-                        const parsed = unparsedToIntention(intention);
-                        if (parsed) {
-                          const copy = [...intentions];
-                          copy[i] = parsed;
-                          setIntentions(copy);
-                        }
-                      }
-                    }}
+                    onFocus={() => markFocused(i)}
+                    onBlur={() => markBlurred(i)}
+                    placeholder='Enter website URL (e.g., facebook.com)'
                   />
                   <label className='input-label'>Website URL</label>
                 </div>
+
                 <div className='input-group'>
                   <textarea
                     className='phrase-input'
-                    placeholder=' '
                     value={intention.phrase}
-                    maxLength={150}
-                    rows={2}
                     onChange={e => {
-                      const copy = [...intentions];
-                      copy[i].phrase = e.target.value;
-                      setIntentions(copy);
+                      const newIntentions = [...intentions];
+                      newIntentions[i] = {
+                        ...newIntentions[i],
+                        phrase: e.target.value,
+                      };
+                      setIntentions(newIntentions);
                     }}
                     onBlur={() => handlePhraseBlur(i)}
                     onKeyDown={e => handlePhraseKeyDown(e, i)}
+                    placeholder='Enter your intention phrase'
+                    maxLength={150}
+                    rows={2}
                   />
                   <label className='input-label'>Intention Phrase</label>
                 </div>
               </div>
+
               <button
                 className='remove-btn'
                 onClick={() => remove(i)}

@@ -5,7 +5,7 @@ import {
   lookupIntention,
   matchesIntentionScopeIgnoringDomain,
   parseUrlToScope,
-  type ParsedIntention,
+  type Intention,
 } from '../components/intention';
 import { normalizeUrl } from '../components/normalized-url';
 import { generateUUID } from '../components/uuid';
@@ -30,7 +30,7 @@ describe('Intender URL Matching - Test Specification', () => {
   );
 
   // Helper function to create ParsedIntention with IntentionScope
-  function createIntention(scope: string, phrase: string): ParsedIntention {
+  function createIntention(scope: string, phrase: string): Intention {
     const parsedScope = parseUrlToScope(scope);
     if (!parsedScope) {
       throw new Error(`Invalid URL: ${scope}`);
@@ -317,6 +317,33 @@ describe('Intender URL Matching - Test Specification', () => {
         ),
         { numRuns: 100 }
       );
+    });
+  });
+
+  describe('Language Path Matching', () => {
+    it('should match language paths correctly in all combinations', () => {
+      // Test case 1: intention with language path matches target with language path
+      const intention1 = createIntention('https://foo.com/en/trepeneur/', 'test1');
+      const scope1 = intention1.scope;
+      if (!scope1) throw new Error('Failed to parse intention1');
+      
+      const target1a = 'https://foo.com/en/trepeneur';
+      const match1a = matchesIntentionScopeIgnoringDomain(target1a, scope1);
+      expect(match1a).toBe(true);
+
+      // Test case 2: intention with language path matches target without language path
+      const target1b = 'https://foo.com/trepeneur';
+      const match1b = matchesIntentionScopeIgnoringDomain(target1b, scope1);
+      expect(match1b).toBe(true);
+
+      // Test case 3: intention without language path matches target with language path
+      const intention2 = createIntention('https://foo.com/trepeneur/', 'test2');
+      const scope2 = intention2.scope;
+      if (!scope2) throw new Error('Failed to parse intention2');
+      
+      const target2 = 'https://foo.com/en/trepeneur';
+      const match2 = matchesIntentionScopeIgnoringDomain(target2, scope2);
+      expect(match2).toBe(true);
     });
   });
 

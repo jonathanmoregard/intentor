@@ -17,7 +17,7 @@ import { UUID, generateUUID } from './uuid';
 
 // Branded type for intention index
 export type IntentionIndex = Brand<
-  Map<string, { scope: IntentionScope; intention: ParsedIntention }[]>,
+  Map<string, { scope: IntentionScope; intention: Intention }[]>,
   'IntentionIndex'
 >;
 
@@ -33,19 +33,25 @@ export interface IntentionScope {
   originalUrl: string; // the original URL string that was parsed
 }
 
-export interface ParsedIntention {
+export interface Intention {
   id: UUID; // UUID for unique identification
   scope: IntentionScope;
   phrase: string;
 }
 
-export interface UnparsedIntention {
+export interface RawIntention {
+  id: UUID;
   url: string;
   phrase: string;
 }
 
-// Union type for heterogeneous intentions
-export type Intention = ParsedIntention | UnparsedIntention;
+export function emptyRawIntention(): RawIntention {
+  return { id: generateUUID(), url: '', phrase: '' };
+}
+
+export function makeRawIntention(url: string, phrase: string): RawIntention {
+  return { id: generateUUID(), url, phrase };
+}
 
 // ============================================================================
 // LANGUAGE DETECTION
@@ -143,95 +149,47 @@ export function parseUrlToScope(urlString: string): IntentionScope | null {
 }
 
 /**
- * Converts a ParsedIntention to UnparsedIntention
+ * Converts a Intention to RawIntention
  */
-export function parsedIntentionToUnparsed(
-  intention: ParsedIntention
-): UnparsedIntention {
+export function parsedIntentionToRaw(intention: Intention): RawIntention {
   return {
+    id: intention.id,
     url: intention.scope.originalUrl,
     phrase: intention.phrase,
   };
 }
 
 /**
- * Converts any Intention to UnparsedIntention
- */
-export function intentionToUnparsed(intention: Intention): UnparsedIntention {
-  if ('scope' in intention) {
-    return parsedIntentionToUnparsed(intention);
-  } else {
-    return intention;
-  }
-}
-
-/**
- * Attempts to convert an UnparsedIntention to Intention.
+ * Attempts to convert a RawIntention to Intention.
  * Returns null if the URL cannot be parsed.
  */
-export function unparsedToIntention(
-  unparsed: UnparsedIntention
-): Intention | null {
-  const scope = parseUrlToScope(unparsed.url);
+export function parseIntention(raw: RawIntention): Intention | null {
+  const scope = parseUrlToScope(raw.url);
   if (!scope) {
     return null;
   }
   return {
-    id: generateUUID(),
+    id: raw.id,
     scope,
-    phrase: unparsed.phrase,
+    phrase: raw.phrase,
   };
 }
 
 /**
- * Checks if an UnparsedIntention can be parsed successfully.
+ * Checks if a RawIntention can be parsed successfully.
  */
-export function canParseIntention(unparsed: UnparsedIntention): boolean {
-  return parseUrlToScope(unparsed.url) !== null;
-}
-
-/**
- * Converts an Intention to ParsedIntention or null.
- * Returns the intention if it's already parsed, or tries to parse unparsed intentions.
- */
-export function toParsedIntention(
-  intention: Intention
-): ParsedIntention | null {
-  if (isParsedIntention(intention)) {
-    return intention;
-  } else {
-    const parsed = unparsedToIntention(intention);
-    return parsed && isParsedIntention(parsed) ? parsed : null;
-  }
-}
-
-// Type guards
-export function isParsedIntention(
-  intention: Intention
-): intention is ParsedIntention {
-  return 'scope' in intention;
-}
-
-export function isUnparsedIntention(
-  intention: Intention
-): intention is UnparsedIntention {
-  return 'url' in intention;
+export function canParseIntention(raw: RawIntention): boolean {
+  return parseUrlToScope(raw.url) !== null;
 }
 
 /**
  * Checks if an intention is empty (no meaningful content).
  */
-export function isEmpty(intention: Intention): boolean {
-  if (isParsedIntention(intention)) {
-    // Parsed intentions are never empty by definition
-    return false;
-  } else {
-    // For unparsed intentions, check if URL and phrase are empty
-    return (
-      (!intention.url || intention.url.trim() === '') &&
-      (!intention.phrase || intention.phrase.trim() === '')
-    );
-  }
+export function isEmpty(intention: RawIntention): boolean {
+  return (
+    (!intention.url || intention.url.trim() === '') &&
+    (!intention.phrase || intention.phrase.trim() === '')
+  );
 }
 
 // ============================================================================
@@ -241,25 +199,21 @@ export function isEmpty(intention: Intention): boolean {
 /**
  * Creates an index for fast intention lookup by domain.
  */
-export function createIntentionIndex(
-  intentions: ParsedIntention[]
-): IntentionIndex {
+export function createIntentionIndex(intentions: Intention[]): IntentionIndex {
   const index = new Map<
     string,
-    { scope: IntentionScope; intention: ParsedIntention }[]
+    { scope: IntentionScope; intention: Intention }[]
   >();
 
   for (const intention of intentions) {
-    const scope = intention.scope;
-    if (!scope) {
-      continue; // Skip invalid intentions
+    const { scope } = intention;
+    const key = scope.domain + '.' + scope.publicSuffix;
+
+    if (!index.has(key)) {
+      index.set(key, []);
     }
 
-    if (!index.has(scope.domain)) {
-      index.set(scope.domain, []);
-    }
-
-    index.get(scope.domain)!.push({ scope, intention });
+    index.get(key)!.push({ scope, intention });
   }
 
   // Sort each domain's intentions by urlLength descending
@@ -351,6 +305,14 @@ export function matchesIntentionScopeIgnoringDomain(
     return true;
   }
 
+  // If that fails, try stripping language from intention path
+  const { remainingPath: intentionRemainingPath } = extractLanguageFromPath(
+    intentionScope.path
+  );
+  if (targetParts.path.startsWith(intentionRemainingPath)) {
+    return true;
+  }
+
   return false;
 }
 
@@ -360,23 +322,24 @@ export function matchesIntentionScopeIgnoringDomain(
 export function lookupIntention(
   targetUrl: string,
   intentionIndex: IntentionIndex
-): ParsedIntention | null {
-  const parsedUrl = parseUrlString(targetUrl);
-  if (!parsedUrl) {
-    return null;
-  }
-  const normalizedTarget = normalizeUrl(parsedUrl);
-  const { domain } = toComponents(normalizedTarget);
-
-  const intentionScopes = intentionIndex.get(domain);
-  if (!intentionScopes) {
+): Intention | null {
+  const targetScope = parseUrlToScope(targetUrl);
+  if (!targetScope) {
     return null;
   }
 
-  const match =
-    intentionScopes.find(item =>
-      matchesIntentionScopeIgnoringDomain(targetUrl, item.scope)
-    ) || null;
+  const key = targetScope.domain + '.' + targetScope.publicSuffix;
+  const intentions = intentionIndex.get(key);
+
+  if (!intentions) {
+    return null;
+  }
+
+  // Find the first matching intention (already sorted by urlLength descending)
+  const match = intentions.find(({ scope }) =>
+    matchesIntentionScopeIgnoringDomain(targetUrl, scope)
+  );
+
   return match ? match.intention : null;
 }
 
