@@ -13,24 +13,48 @@
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
+    "prepare": "husky install",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:url-matching": "vitest url-matching.test.ts"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "@types/webextension-polyfill": "^0.12.3",
+    "@vitest/coverage-v8": "^3.2.4",
     "chrome-types": "^0.1.367",
+    "fast-check": "^4.2.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "ts-brand": "^0.2.0",
     "typescript": "^5.8.3",
+    "vitest": "^3.2.4",
     "wxt": "^0.20.7"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,html,css}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "i18n-iso-countries": "^7.14.0",
+    "iso-639-1": "^3.1.5",
     "lodash-es": "^4.17.21",
+    "normalize-url": "^8.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tldts": "^7.0.10",
+    "urlpattern-polyfill": "^10.1.0",
+    "uuid": "^11.1.0",
     "webextension-polyfill": "^0.12.0"
   }
 }

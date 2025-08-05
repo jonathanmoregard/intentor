@@ -35,7 +35,7 @@
 - **Permissions**: Test permission requests and handling
 - **Incognito**: Test private browsing mode functionality
 
-## Multi-Tab Testing Scenarios
+## E2E - Multi-Tab Testing Scenarios
 
 ### Core Functionality Tests
 

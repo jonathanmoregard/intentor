@@ -112,6 +112,7 @@ draw();
 
 const query = new URLSearchParams(window.location.search);
 const target = query.get('target');
+const intentionId = query.get('intention');
 
 const phraseDisplayEl = document.getElementById(
   'phrase-display'
@@ -123,7 +124,8 @@ const helperTextEl = document.getElementById('helper-text') as HTMLElement;
 let expectedPhrase = '';
 
 storage.get().then(({ intentions }) => {
-  const match = intentions.find(r => target?.includes(r.url));
+  // Use intention ID for precise lookup
+  const match = intentions.find(r => r.id === intentionId);
   if (match) {
     expectedPhrase = match.phrase;
     phraseDisplayEl.textContent = expectedPhrase;

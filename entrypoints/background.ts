@@ -1,11 +1,17 @@
 import browser from 'webextension-polyfill';
-import { storage, type Intention } from '../components/storage';
-
-import { parse } from 'tldts';
+import { mapNulls } from '../components/helpers';
+import {
+  createIntentionIndex,
+  lookupIntention,
+  parseIntention,
+  parseUrlToScope,
+  type IntentionIndex,
+} from '../components/intention';
+import { storage } from '../components/storage';
 
 const getDomain = (input: string): string => {
-  const { domain } = parse(input);
-  return domain ?? '';
+  const parsed = parseUrlToScope(input);
+  return parsed?.domain || '';
 };
 
 const domainEquals = (url1: string, url2: string): boolean => {
@@ -18,29 +24,14 @@ const domainEquals = (url1: string, url2: string): boolean => {
 // @ts-ignore
 export default defineBackground(async () => {
   // Cache data that won't change during session
-  let cachedIntentions: (Intention & { hostname: string })[] = [];
+  let intentionIndex: IntentionIndex = createIntentionIndex([]);
   const intentionPageUrl = browser.runtime.getURL('intention-page.html');
-
-  // Helper to sanitize and parse a single intention URL
-  const processIntention = (
-    intention: Intention
-  ): Intention & { hostname: string } => {
-    let hostname = '';
-    try {
-      // Remove any existing scheme and add https://
-      const cleanUrl = intention.url.replace(/^https?:\/\//, '');
-      const url = new URL(`https://${cleanUrl}`);
-      hostname = url.hostname;
-    } catch {
-      // Fallback to original URL if parsing fails
-      hostname = intention.url;
-    }
-    return { ...intention, hostname };
-  };
 
   // Load intentions on startup before registering listener to prevent race conditions
   const { intentions } = await storage.get();
-  cachedIntentions = intentions.map(processIntention);
+  const parsedIntentions = mapNulls(parseIntention, intentions);
+
+  intentionIndex = createIntentionIndex(parsedIntentions);
 
   browser.webNavigation.onBeforeNavigate.addListener(async details => {
     if (details.frameId !== 0) return;
@@ -65,10 +56,14 @@ export default defineBackground(async () => {
     // Development logging
     console.log('[Intender] Navigation check:', {
       targetUrl,
-      sourceUrl,
+      sourceUrl: sourceUrl || 'null',
+      sourceTabId: details.tabId,
+      sourceTabExists: !!sourceTab,
       navigationTabId,
       activeTabId,
-      activeTabUrl,
+      activeTabUrl: activeTabUrl || 'null',
+      isNavigationTabActive,
+      frameId: details.frameId,
     });
 
     // Rule 1: If navigating from same domain → same domain, allow
@@ -100,30 +95,20 @@ export default defineBackground(async () => {
       return;
     }
 
-    // Rule 4: Otherwise, check if we need to block
-    let targetHostname = '';
-    try {
-      targetHostname = new URL(targetUrl).hostname;
-    } catch {
-      // Invalid URL, skip matching
-    }
+    // Rule 4: Otherwise, check if we need to block using new matching system
+    const matchedIntention = lookupIntention(targetUrl, intentionIndex);
 
-    const match = cachedIntentions.find(i => {
-      if (!targetHostname || !i.hostname) return false;
-      return (
-        targetHostname === i.hostname ||
-        targetHostname.endsWith(`.${i.hostname}`)
-      );
-    });
-
-    if (match) {
+    if (matchedIntention) {
       console.log(
         '[Intender] Rule 4: Blocking navigation, showing intention page for:',
-        match
+        matchedIntention
       );
 
       const redirectUrl = browser.runtime.getURL(
-        'intention-page.html?target=' + encodeURIComponent(targetUrl)
+        'intention-page.html?target=' +
+          encodeURIComponent(targetUrl) +
+          '&intention=' +
+          encodeURIComponent(matchedIntention.id)
       );
 
       try {
@@ -136,10 +121,11 @@ export default defineBackground(async () => {
   });
 
   // Refresh cached intentions when storage changes
-  browser.storage.onChanged.addListener(changes => {
+  browser.storage.onChanged.addListener(async changes => {
     if (changes.intentions) {
-      const newIntentions = (changes.intentions.newValue as Intention[]) || [];
-      cachedIntentions = newIntentions.map(processIntention);
+      const { intentions } = await storage.get();
+      const parsedIntentions = mapNulls(parseIntention, intentions);
+      intentionIndex = createIntentionIndex(parsedIntentions);
     }
   });
 });

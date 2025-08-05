@@ -21,7 +21,8 @@
       }
 
       @keyframes float {
-        0%, 100% {
+        0%,
+        100% {
           transform: translateY(0px) translateX(0px);
           opacity: 0.03;
         }
@@ -62,9 +63,21 @@
         }
       }
 
-
       body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans',
+          sans-serif,
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji';
         display: flex;
         justify-content: center;
         align-items: center;
@@ -86,7 +99,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(254, 227, 164, 0.15), rgba(254, 248, 234, 0.1));
+        background: linear-gradient(
+          135deg,
+          rgba(254, 227, 164, 0.15),
+          rgba(254, 248, 234, 0.1)
+        );
         pointer-events: none;
         z-index: 1;
       }
@@ -100,12 +117,36 @@
         right: 0;
         bottom: 0;
         background-image:
-          radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-          radial-gradient(1px 1px at 85% 75%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-          radial-gradient(1px 1px at 35% 85%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
-          radial-gradient(1px 1px at 65% 15%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-          radial-gradient(1px 1px at 45% 55%, rgba(255, 255, 255, 0.04) 50%, transparent 50%),
-          radial-gradient(1px 1px at 75% 45%, rgba(255, 255, 255, 0.06) 50%, transparent 50%);
+          radial-gradient(
+            1px 1px at 15% 25%,
+            rgba(255, 255, 255, 0.08) 50%,
+            transparent 50%
+          ),
+          radial-gradient(
+            1px 1px at 85% 75%,
+            rgba(255, 255, 255, 0.06) 50%,
+            transparent 50%
+          ),
+          radial-gradient(
+            1px 1px at 35% 85%,
+            rgba(255, 255, 255, 0.07) 50%,
+            transparent 50%
+          ),
+          radial-gradient(
+            1px 1px at 65% 15%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 50%
+          ),
+          radial-gradient(
+            1px 1px at 45% 55%,
+            rgba(255, 255, 255, 0.04) 50%,
+            transparent 50%
+          ),
+          radial-gradient(
+            1px 1px at 75% 45%,
+            rgba(255, 255, 255, 0.06) 50%,
+            transparent 50%
+          );
         animation: float 12s ease-in-out infinite;
         pointer-events: none;
         z-index: 2;
@@ -134,7 +175,9 @@
       .container {
         flex-direction: column;
         align-items: center;
-        animation: fadeIn 0.6s ease-out, breathe 10s ease-in-out infinite;
+        animation:
+          fadeIn 0.6s ease-out,
+          breathe 10s ease-in-out infinite;
       }
 
       /* Radial gradient behind card for better readability */
@@ -145,7 +188,12 @@
         left: -20px;
         right: -20px;
         bottom: -20px;
-        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 40%, transparent 70%);
+        background: radial-gradient(
+          ellipse at center,
+          rgba(0, 0, 0, 0.15) 0%,
+          rgba(0, 0, 0, 0.05) 40%,
+          transparent 70%
+        );
         border-radius: 16px;
         z-index: 30;
         pointer-events: none;
@@ -248,8 +296,6 @@
       .phrase-input::-webkit-scrollbar {
         display: none;
       }
-
-
 
       .phrase-input::placeholder {
         color: rgba(48, 51, 46, 0.5);
@@ -372,7 +418,6 @@
         opacity: 1;
       }
 
-
       .intender-logo {
         position: fixed;
         bottom: 20px;
@@ -394,24 +439,24 @@
         pointer-events: none;
         z-index: 9;
         filter: blur(2px);
-              }
+      }
 
-        /* Responsive scaling for smaller screens */
-        @media (max-width: 600px) {
-          .container {
-            transform: scale(0.9);
-            margin: 2rem 0;
-          }
+      /* Responsive scaling for smaller screens */
+      @media (max-width: 600px) {
+        .container {
+          transform: scale(0.9);
+          margin: 2rem 0;
         }
+      }
 
-        @media (max-width: 480px) {
-          .container {
-            transform: scale(0.85);
-            margin: 1.5rem 0;
-          }
+      @media (max-width: 480px) {
+        .container {
+          transform: scale(0.85);
+          margin: 1.5rem 0;
         }
-      </style>
-    </head>
+      }
+    </style>
+  </head>
   <body>
     <canvas id="particles-canvas"></canvas>
     <div class="container">
@@ -421,7 +466,9 @@
         <div class="input-container">
           <textarea id="phrase" class="phrase-input grey"></textarea>
         </div>
-        <div id="helper-text" class="helper-text">That doesn't match your intention. Try again.</div>
+        <div id="helper-text" class="helper-text">
+          That doesn't match your intention. Try again.
+        </div>
         <button id="go" class="enter-btn">Continue</button>
       </div>
     </div>

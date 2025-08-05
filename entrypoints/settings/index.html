@@ -4,9 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Intender Options</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -15,10 +18,19 @@
       }
 
       body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-        background: #FEF8EA;
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans',
+          sans-serif;
+        background: #fef8ea;
         min-height: 100vh;
-        color: #30332E;
+        color: #30332e;
         margin: 0;
         padding: 0;
       }
@@ -26,7 +38,7 @@
       .options-container {
         display: flex;
         min-height: 100vh;
-        background: #FEF8EA;
+        background: #fef8ea;
       }
 
       /* Sidebar Styles */
@@ -50,7 +62,7 @@
       .sidebar-header h1 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #30332E;
+        color: #30332e;
         text-align: center;
       }
 
@@ -75,16 +87,16 @@
 
       .tab-btn:hover {
         background: rgba(158, 142, 51, 0.1);
-        color: #30332E;
+        color: #30332e;
       }
 
       .tab-btn.active {
         background: rgba(158, 142, 51, 0.15);
-        color: #30332E;
-        border-left-color: #9E8E33;
+        color: #30332e;
+        border-left-color: #9e8e33;
         font-weight: 500;
         background: rgba(158, 142, 51, 0.2);
-        color: #9E8E33;
+        color: #9e8e33;
       }
 
       /* Content Area */
@@ -98,7 +110,7 @@
       .settings-tab h2 {
         font-size: 1.8rem;
         margin-bottom: 0.5rem;
-        color: #30332E;
+        color: #30332e;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
       }
@@ -130,7 +142,7 @@
       }
 
       .intention-item:hover {
-        border-color: #9E8E33;
+        border-color: #9e8e33;
         box-shadow: 0 4px 16px rgba(158, 142, 51, 0.15);
       }
 
@@ -141,13 +153,13 @@
       .logo {
         width: 32px;
         height: 32px;
-        background: linear-gradient(135deg, #9E8E33, #FEE3A4);
+        background: linear-gradient(135deg, #9e8e33, #fee3a4);
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 600;
-        color: #30332E;
+        color: #30332e;
         font-size: 1.2rem;
         font-family: 'Inter', sans-serif;
         font-size: 1.5rem;
@@ -185,7 +197,7 @@
         top: -0.5rem;
         left: 0.5rem;
         font-size: 0.75rem;
-        color: #9E8E33;
+        color: #9e8e33;
         font-weight: 500;
       }
 
@@ -217,7 +229,7 @@
       .url-input:focus,
       .phrase-input:focus {
         outline: none;
-        border-color: #9E8E33;
+        border-color: #9e8e33;
         box-shadow: 0 0 0 3px rgba(158, 142, 51, 0.1);
       }
 
@@ -228,12 +240,12 @@
         top: -0.5rem;
         left: 0.5rem;
         font-size: 0.75rem;
-        color: #9E8E33;
+        color: #9e8e33;
         font-weight: 500;
       }
 
       .remove-btn {
-        background: #FE621D;
+        background: #fe621d;
         color: white;
         border: none;
         border-radius: 50%;
@@ -273,7 +285,11 @@
         transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
         letter-spacing: 0.5px;
-        background: linear-gradient(135deg, rgba(158, 142, 51, 0.8), rgba(158, 142, 51, 0.6));
+        background: linear-gradient(
+          135deg,
+          rgba(158, 142, 51, 0.8),
+          rgba(158, 142, 51, 0.6)
+        );
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(158, 142, 51, 0.4);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -281,7 +297,11 @@
 
       .add-btn:hover,
       .save-btn:hover {
-        background: linear-gradient(135deg, rgba(158, 142, 51, 0.9), rgba(158, 142, 51, 0.7));
+        background: linear-gradient(
+          135deg,
+          rgba(158, 142, 51, 0.9),
+          rgba(158, 142, 51, 0.7)
+        );
         transform: translateY(-1px) scale(1.02);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
@@ -300,7 +320,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
-        color: #30332E;
+        color: #30332e;
         font-size: 1.5rem;
         font-weight: 600;
         line-height: 1;
@@ -313,7 +333,7 @@
 
       .more-options-btn:hover {
         background: rgba(255, 255, 255, 0.9);
-        border-color: #9E8E33;
+        border-color: #9e8e33;
       }
 
       .more-options-dropdown {
@@ -340,7 +360,7 @@
         transition: background 0.3s ease;
         font-family: 'Inter', sans-serif;
         font-size: 0.9rem;
-        color: #30332E;
+        color: #30332e;
         border: none;
         background: none;
         width: 100%;
@@ -372,7 +392,7 @@
       .examples-section h3 {
         margin: 0 0 0.5rem 0;
         font-size: 1.2rem;
-        color: #30332E;
+        color: #30332e;
         font-weight: 600;
         font-family: 'Inter', sans-serif;
       }
@@ -414,7 +434,7 @@
 
       .example-url {
         font-weight: 600;
-        color: #30332E;
+        color: #30332e;
         margin-bottom: 0.25rem;
         font-size: 0.9rem;
         font-family: 'Inter', sans-serif;
@@ -428,7 +448,11 @@
       }
 
       .quick-add-btn {
-        background: linear-gradient(135deg, rgba(158, 142, 51, 0.8), rgba(158, 142, 51, 0.6));
+        background: linear-gradient(
+          135deg,
+          rgba(158, 142, 51, 0.8),
+          rgba(158, 142, 51, 0.6)
+        );
         color: rgba(255, 255, 255, 0.9);
         border: none;
         border-radius: 50%;
@@ -445,7 +469,11 @@
       }
 
       .quick-add-btn:hover {
-        background: linear-gradient(135deg, rgba(158, 142, 51, 0.9), rgba(158, 142, 51, 0.7));
+        background: linear-gradient(
+          135deg,
+          rgba(158, 142, 51, 0.9),
+          rgba(158, 142, 51, 0.7)
+        );
         transform: scale(1.1);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
@@ -466,7 +494,7 @@
       .about-tab h2 {
         font-size: 1.8rem;
         margin-bottom: 1rem;
-        color: #30332E;
+        color: #30332e;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
       }
@@ -486,7 +514,7 @@
       .about-content h3 {
         font-size: 1.2rem;
         margin: 1.5rem 0 0.5rem;
-        color: #30332E;
+        color: #30332e;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
       }
@@ -509,7 +537,7 @@
         padding: 1rem;
         background: rgba(255, 255, 255, 0.8);
         border-radius: 12px;
-        border-left: 4px solid #9E8E33;
+        border-left: 4px solid #9e8e33;
         backdrop-filter: blur(10px);
       }
 
@@ -557,7 +585,7 @@
 
         .tab-btn.active {
           border-left-color: transparent;
-          border-bottom-color: #9E8E33;
+          border-bottom-color: #9e8e33;
         }
 
         .content {
@@ -604,7 +632,7 @@
         margin: 0 0 1rem 0;
         font-size: 1.2rem;
         font-weight: 600;
-        color: #30332E;
+        color: #30332e;
         font-family: 'Inter', sans-serif;
       }
 
@@ -625,7 +653,7 @@
         padding: 0.75rem 1.5rem;
         border: 1px solid rgba(158, 142, 51, 0.3);
         background: rgba(255, 255, 255, 0.9);
-        color: #30332E;
+        color: #30332e;
         border-radius: 8px;
         cursor: pointer;
         font-family: 'Inter', sans-serif;
@@ -635,13 +663,13 @@
 
       .cancel-btn:hover {
         background: rgba(255, 255, 255, 1);
-        border-color: #9E8E33;
+        border-color: #9e8e33;
       }
 
       .confirm-btn {
         padding: 0.75rem 1.5rem;
         border: none;
-        background: #FE621D;
+        background: #fe621d;
         color: white;
         border-radius: 8px;
         cursor: pointer;
@@ -651,6 +679,136 @@
       }
 
       .confirm-btn:hover {
+        background: #e55a1a;
+        transform: translateY(-1px);
+      }
+
+      /* Error styling for unparseable URLs */
+      .url-input.error {
+        border-color: #fe621d;
+        background-color: rgba(254, 98, 29, 0.05);
+      }
+
+      .url-input.error:focus {
+        border-color: #fe621d;
+        box-shadow: 0 0 0 2px rgba(254, 98, 29, 0.2);
+      }
+
+      /* Success styling for parsed URLs */
+      .url-input.parseable {
+        background: #9e8e33;
+        color: white;
+        border: 3px solid #8a7d2e;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+      }
+
+      .url-input.parseable:focus {
+        background: #9e8e33;
+        color: white;
+        border: 3px solid #8a7d2e;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+          0 0 0 2px rgba(158, 142, 51, 0.2);
+      }
+
+      .url-input.parseable::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* Hide label for parseable inputs */
+      .url-input.parseable + .input-label {
+        display: none;
+      }
+
+      /* Warning Dialog for Unparseable Intentions */
+      .warning-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+
+      .warning-dialog {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        max-width: 500px;
+        width: 90%;
+        border: 1px solid rgba(254, 98, 29, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .warning-dialog h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #30332e;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .warning-dialog p {
+        margin: 0 0 1.5rem 0;
+        color: rgba(48, 51, 46, 0.8);
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .unparseable-list {
+        margin: 0 0 1.5rem 0;
+        padding: 0;
+        list-style: none;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .unparseable-item {
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        background: rgba(254, 98, 29, 0.1);
+        border: 1px solid rgba(254, 98, 29, 0.2);
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .unparseable-url {
+        font-weight: 600;
+        color: #fe621d;
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+      }
+
+      .unparseable-phrase {
+        color: rgba(48, 51, 46, 0.7);
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+
+      .warning-dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .warning-dialog-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: #fe621d;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .warning-dialog-btn:hover {
         background: #e55a1a;
         transform: translateY(-1px);
       }

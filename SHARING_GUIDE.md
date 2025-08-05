@@ -7,12 +7,10 @@ Intender is a browser extension that helps you pause and reflect before visiting
 ## How to Install (Chrome/Edge)
 
 1. **Download the extension files**
-
    - The built extension is in the `.output/chrome-mv3/` folder
    - You can zip this folder and share it, or share the folder directly
 
 2. **Install in Chrome/Edge:**
-
    - Open Chrome/Edge and go to `chrome://extensions/`
    - Enable "Developer mode" (toggle in top right)
    - Click "Load unpacked"
@@ -20,7 +18,6 @@ Intender is a browser extension that helps you pause and reflect before visiting
    - The extension should now appear in your extensions list
 
 3. **Set up your first intention:**
-
    - Click the Intender icon in your browser toolbar
    - Go to Settings
    - Add a website URL (e.g., "reddit.com")

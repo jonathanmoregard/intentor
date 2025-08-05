@@ -1,4 +1,4 @@
-# TODO
+# TODO (For Humans) - AI kept using as scratchpad before name change
 
 ## Revenue & Marketing
 
@@ -25,4 +25,5 @@
 - Add automated testing, CI/CD
 - Add documentation, security audit
 - Add privacy policy, terms of service
-- Look over format/handling of "url" in intention - currently a bit of a mess
+- Consider implementing warning for incomplete intentions (unparseable), making sure user don't leave some in a n unfinished state
+- handle race conditions in backgroundworker (https://chatgpt.com/share/6892069c-0914-8003-bbb4-1246d44fa1fd)
