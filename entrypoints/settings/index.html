@@ -182,15 +182,16 @@
 
       .input-label {
         position: absolute;
-        top: 0.75rem;
-        left: 0.75rem;
+        top: -0.5rem;
+        left: 0.5rem;
         font-family: 'Inter', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         color: rgba(48, 51, 46, 0.6);
         transition: all 0.3s ease;
         pointer-events: none;
         background: rgba(255, 255, 255, 0.9);
         padding: 0 0.25rem;
+        font-weight: 500;
       }
 
       .input-label.floating {
@@ -237,11 +238,7 @@
       .phrase-input:focus + .input-label,
       .url-input:not(:placeholder-shown) + .input-label,
       .phrase-input:not(:placeholder-shown) + .input-label {
-        top: -0.5rem;
-        left: 0.5rem;
-        font-size: 0.75rem;
         color: #9e8e33;
-        font-weight: 500;
       }
 
       .remove-btn {
