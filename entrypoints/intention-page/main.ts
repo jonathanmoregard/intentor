@@ -1,3 +1,4 @@
+import { type Intention } from '../../components/intention';
 import { storage } from '../../components/storage';
 
 // Particles animation setup

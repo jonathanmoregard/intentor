@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill';
+import { Intention } from './intention';
 
 declare const __IS_DEV__: boolean;
 
@@ -12,9 +13,4 @@ export const storage = {
   async set(data: { intentions: Intention[] }) {
     await backend.set(data);
   },
-};
-
-export type Intention = {
-  url: string;
-  phrase: string;
 };

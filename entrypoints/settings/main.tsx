@@ -1,9 +1,46 @@
 import { debounce } from 'lodash-es';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Intention, storage } from '../../components/storage';
+import {
+  type Intention,
+  type IntentionScope,
+  parseUrlToScope,
+} from '../../components/intention';
+import { storage } from '../../components/storage';
 
 type Tab = 'settings' | 'about';
+
+// Helper function to create an empty IntentionScope
+function createEmptyIntentionScope(): IntentionScope {
+  return {
+    domain: '',
+    publicSuffix: '',
+    subdomain: null,
+    path: '',
+    urlLength: 0,
+    hasLanguageSuffix: false,
+    hasLanguageSubdomain: false,
+    hasLanguagePathStart: false,
+  };
+}
+
+// Helper function to convert IntentionScope to display string
+function scopeToString(scope: IntentionScope): string {
+  if (!scope.domain) return '';
+  const hostname = scope.subdomain
+    ? `${scope.subdomain}.${scope.domain}.${scope.publicSuffix}`
+    : `${scope.domain}.${scope.publicSuffix}`;
+  return hostname + scope.path;
+}
+
+// Helper function to convert user input string to IntentionScope
+function stringToScope(input: string): IntentionScope {
+  const trimmed = input.trim();
+  if (!trimmed) return createEmptyIntentionScope();
+
+  const parsed = parseUrlToScope(trimmed);
+  return parsed || createEmptyIntentionScope();
+}
 
 const SettingsTab = memo(() => {
   const [intentions, setIntentions] = useState<Intention[]>([]);
@@ -29,7 +66,8 @@ const SettingsTab = memo(() => {
   const moreOptionsRef = useRef<HTMLDivElement>(null);
 
   const isIntentionEmpty = useCallback((intention: Intention) => {
-    return intention.url.trim() === '';
+    // Check if the scope has a domain (basic validation)
+    return !intention.scope.domain || intention.scope.domain.trim() === '';
   }, []);
 
   const focusNewIntentionUrl = useCallback((intentionIndex: number) => {
@@ -81,7 +119,7 @@ const SettingsTab = memo(() => {
       const initialIntentions =
         data.intentions.length > 0
           ? data.intentions
-          : [{ url: '', phrase: '' }];
+          : [{ scope: createEmptyIntentionScope(), phrase: '' }];
       setIntentions(initialIntentions);
 
       // Check if we should show examples based on initial load
@@ -92,8 +130,7 @@ const SettingsTab = memo(() => {
 
       // Auto-focus first empty intention URL
       const firstEmptyIndex = initialIntentions.findIndex(
-        intention =>
-          intention.url.trim() === '' && intention.phrase.trim() === ''
+        intention => !intention.scope.domain && intention.phrase.trim() === ''
       );
       if (firstEmptyIndex !== -1) {
         setTimeout(() => {
@@ -144,22 +181,31 @@ const SettingsTab = memo(() => {
 
     // Ensure we always have at least one intention (empty if needed)
     setIntentions(
-      cleanIntentions.length > 0 ? cleanIntentions : [{ url: '', phrase: '' }]
+      cleanIntentions.length > 0
+        ? cleanIntentions
+        : [{ scope: createEmptyIntentionScope(), phrase: '' }]
     );
   };
 
   const addIntention = () => {
     setIntentions(prev => {
-      const newIntentions = [...prev, { url: '', phrase: '' }];
+      const newIntentions = [
+        ...prev,
+        { scope: createEmptyIntentionScope(), phrase: '' },
+      ];
       // Focus the new intention's URL input
       focusNewIntentionUrl(newIntentions.length - 1);
       return newIntentions;
     });
   };
 
-  const addExampleIntention = (example: Intention) => {
+  const addExampleIntention = (example: { url: string; phrase: string }) => {
     setIntentions(prev => {
-      const newIntentions = [...prev, example];
+      const newIntention: Intention = {
+        scope: stringToScope(example.url),
+        phrase: example.phrase,
+      };
+      const newIntentions = [...prev, newIntention];
       // Focus the new intention's URL input
       focusNewIntentionUrl(newIntentions.length - 1);
       return newIntentions;
@@ -169,7 +215,7 @@ const SettingsTab = memo(() => {
   const remove = (index: number) => {
     const intention = intentions[index];
     const hasContent =
-      intention.url.trim() !== '' || intention.phrase.trim() !== '';
+      intention.scope.domain.trim() !== '' || intention.phrase.trim() !== '';
 
     // Show confirmation dialog for intentions with content
     if (hasContent) {
@@ -185,7 +231,9 @@ const SettingsTab = memo(() => {
     const newIntentions = intentions.filter((_, i) => i !== index);
     // Ensure we always have at least one intention (empty if needed)
     const finalIntentions =
-      newIntentions.length > 0 ? newIntentions : [{ url: '', phrase: '' }];
+      newIntentions.length > 0
+        ? newIntentions
+        : [{ scope: createEmptyIntentionScope(), phrase: '' }];
     setIntentions(finalIntentions);
   };
 
@@ -220,12 +268,15 @@ const SettingsTab = memo(() => {
       const intention = intentions[intentionIndex];
       const isLastIntention = intentionIndex === intentions.length - 1;
       const intentionHasContent =
-        intention.url.trim() !== '' || intention.phrase.trim() !== '';
+        intention.scope.domain.trim() !== '' || intention.phrase.trim() !== '';
 
       if (isLastIntention && intentionHasContent) {
         e.preventDefault();
         setIntentions(prev => {
-          const newIntentions = [...prev, { url: '', phrase: '' }];
+          const newIntentions = [
+            ...prev,
+            { scope: createEmptyIntentionScope(), phrase: '' },
+          ];
           // Focus the new intention's URL input
           focusNewIntentionUrl(newIntentions.length - 1);
           return newIntentions;
@@ -365,10 +416,10 @@ const SettingsTab = memo(() => {
                   }}
                   className='url-input'
                   placeholder=' '
-                  value={intention.url}
+                  value={scopeToString(intention.scope)}
                   onChange={e => {
                     const copy = [...intentions];
-                    copy[i].url = e.target.value;
+                    copy[i].scope = stringToScope(e.target.value);
                     setIntentions(copy);
                   }}
                 />

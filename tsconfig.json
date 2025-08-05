@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "types": ["chrome", "webextension-polyfill"]
+    "types": ["chrome", "webextension-polyfill", "jest"]
   },
-  "include": ["src", "entrypoints", "components"]
+  "include": ["src", "entrypoints", "components", "tests"]
 }
