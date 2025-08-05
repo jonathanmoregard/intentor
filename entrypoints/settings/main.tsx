@@ -3,15 +3,14 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   type Intention,
-  type IntentionScope,
   type UnparsedIntention,
   canParseIntention,
   intentionToUnparsed,
   isEmpty,
   isParsedIntention,
   isUnparsedIntention,
-  parseUrlToScope,
   unparsedToIntention,
+  viewScope,
 } from '../../components/intention';
 import { storage } from '../../components/storage';
 
@@ -19,40 +18,6 @@ type Tab = 'settings' | 'about';
 
 // Union type for heterogeneous intentions
 type IntentionItem = Intention;
-
-// Helper function to create an empty IntentionScope
-function createEmptyIntentionScope(): IntentionScope {
-  return {
-    domain: '',
-    publicSuffix: '',
-    subdomain: null,
-    path: '',
-    urlLength: 0,
-    hasLanguageSuffix: false,
-    hasLanguageSubdomain: false,
-    hasLanguagePathStart: false,
-    originalUrl: '',
-  };
-}
-
-// Helper function to convert IntentionScope to display string
-function viewScope(scope: IntentionScope): string {
-  if (!scope.domain) return '';
-  // tldts uses domain="registrableDomain" which includes the public suffix
-  const hostname = scope.subdomain
-    ? `${scope.subdomain}.${scope.domain}`
-    : `${scope.domain}`;
-  return hostname + scope.path;
-}
-
-// Helper function to convert user input string to IntentionScope
-function stringToScope(input: string): IntentionScope {
-  const trimmed = input.trim();
-  if (!trimmed) return createEmptyIntentionScope();
-
-  const parsed = parseUrlToScope(trimmed);
-  return parsed || createEmptyIntentionScope();
-}
 
 const SettingsTab = memo(
   ({ setActiveTab }: { setActiveTab: (tab: Tab) => void }) => {

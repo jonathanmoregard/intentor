@@ -379,3 +379,32 @@ export function lookupIntention(
     ) || null;
   return match ? match.intention : null;
 }
+
+/**
+ * Creates an empty IntentionScope with default values.
+ */
+export function createEmptyIntentionScope(): IntentionScope {
+  return {
+    domain: '',
+    publicSuffix: '',
+    subdomain: null,
+    path: '',
+    urlLength: 0,
+    hasLanguageSuffix: false,
+    hasLanguageSubdomain: false,
+    hasLanguagePathStart: false,
+    originalUrl: '',
+  };
+}
+
+/**
+ * Converts an IntentionScope to a display string.
+ * tldts uses domain="registrableDomain" which includes the public suffix
+ */
+export function viewScope(scope: IntentionScope): string {
+  if (!scope.domain) return '';
+  const hostname = scope.subdomain
+    ? `${scope.subdomain}.${scope.domain}`
+    : `${scope.domain}`;
+  return hostname + scope.path;
+}
