@@ -71,3 +71,7 @@ Any other relevant information that might help debug the issue.
 - Remove sections that don't apply to your issue
 - Be as specific as possible in your description
 - Include all relevant context that might affect the issue
+
+## Related Documentation
+
+For contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).

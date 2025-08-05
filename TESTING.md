@@ -1,5 +1,9 @@
 # Intender Testing Guide
 
+For installation and distribution instructions, see [SHARING_GUIDE.md](./SHARING_GUIDE.md).
+
+For bug reporting, use our [Bug Report Template](./BUG_REPORT_TEMPLATE.md).
+
 ## General Testing Areas
 
 ### Cross-Platform Testing
