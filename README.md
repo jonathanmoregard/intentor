@@ -1,5 +1,7 @@
 # Intender
 
+[![AGPL-3.0 License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 A browser extension that helps you pause and reflect before visiting certain websites. It gives you an opportunity to reflect and write down an intention before you enter the page.
 
 ## Overview
@@ -40,11 +42,11 @@ Intender embraces a **mindful, non-coercive approach** to digital wellness. Rath
 
 For detailed design specifications, see [STYLE_GUIDE.md](./STYLE_GUIDE.md).
 
-For testing scenarios and guidelines, see [TESTING.md](./TESTING.md).
-
 ## Contributing
 
 Found a bug? Please use our [Bug Report Template](./BUG_REPORT_TEMPLATE.md) to report issues.
+
+Want to contribute? See our [Contributing Guide](./CONTRIBUTING.md) for details.
 
 _Built with [Cursor](https://cursor.sh) - the AI-first code editor._
 
@@ -53,3 +55,7 @@ _Built with [Cursor](https://cursor.sh) - the AI-first code editor._
 - **Productivity**: Add gentle friction to distracting websites like social media
 - **Mindfulness**: Encourage intentional browsing habits through reflection
 - **Focus**: Create moments of pause before visiting time-wasting sites
+
+## Getting Started
+
+For development setup and technical details, see our [Contributing Guide](./CONTRIBUTING.md).

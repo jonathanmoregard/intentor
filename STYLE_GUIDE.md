@@ -37,3 +37,7 @@ Intender embraces a **mindful, non-coercive approach** to digital wellness. Rath
 - **Shadow**: 2px y-offset, 6px blur, 30% black (`0 2px 6px rgba(0, 0, 0, 0.3)`)
 - **Hover state**: Brighten gradient by ~5%, scale to 102%, shadow becomes `0 4px 12px rgba(0, 0, 0, 0.4)`
 - **Transition**: 150ms ease for hover interactions
+
+## Related Documentation
+
+For contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
