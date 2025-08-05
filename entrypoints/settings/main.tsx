@@ -501,6 +501,14 @@ const SettingsTab = memo(
                       } as UnparsedIntention;
                       setIntentions(copy);
                     }}
+                    onFocus={() => {
+                      // Convert parsed intention back to unparsed when focusing
+                      if (isParsedIntention(intention)) {
+                        const copy = [...intentions];
+                        copy[i] = intentionToUnparsed(intention);
+                        setIntentions(copy);
+                      }
+                    }}
                     onBlur={() => {
                       // Mark this input as blurred
                       setBlurredInputs(prev => new Set([...prev, i]));

@@ -668,20 +668,26 @@
 
       /* Success styling for parsed URLs */
       .url-input.parsed {
-        border-color: #9E8E33;
-        background-color: #9E8E33;
+        background: #9E8E33;
         color: white;
+        border: 3px solid #8A7D2E;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
       }
 
       .url-input.parsed:focus {
-        border-color: #9E8E33;
-        background-color: #9E8E33;
+        background: #9E8E33;
         color: white;
-        box-shadow: 0 0 0 2px rgba(158, 142, 51, 0.2);
+        border: 3px solid #8A7D2E;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset, 0 0 0 2px rgba(158, 142, 51, 0.2);
       }
 
       .url-input.parsed::placeholder {
         color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* Hide label for parsed inputs */
+      .url-input.parsed + .input-label {
+        display: none;
       }
 
       /* Warning Dialog for Unparseable Intentions */
