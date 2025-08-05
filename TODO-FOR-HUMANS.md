@@ -26,3 +26,7 @@
 - Add documentation, security audit
 - Add privacy policy, terms of service
 - Consider implementing warning for incomplete intentions (unparseable), making sure user don't leave some in a n unfinished state
+
+## Related Documentation
+
+For practical non-technical details, see [PRACTICAL-NON-TECHNICAL.md](./PRACTICAL-NON-TECHNICAL.md).

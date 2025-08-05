@@ -1,6 +1,6 @@
 ## Web Stores, CI/CD, Review
 
-#### ✅ Chrome Web Store
+### ✅ Chrome Web Store
 
 - **Unlisted publishing is supported**
   - Requires one-time $5 developer registration
@@ -15,7 +15,7 @@
   - Privacy policy **required** if handling user data (even if local only)
   - Host a minimal static policy (e.g. GitHub Pages)
 
-#### ✅ Firefox Add-ons (AMO)
+### ✅ Firefox Add-ons (AMO)
 
 - **Unlisted (self-distributed) publishing is supported**
   - Upload `.xpi` → signed → direct download link
@@ -28,9 +28,9 @@
 - **Privacy**
   - Same as Chrome: minimal policy required for local data
 
-#### ⛔ Safari - Not worth it atm
+### ⛔ Safari - Not worth it atm
 
-#### Permissions & Review Risk
+### Permissions & Review Risk
 
 - Declaring `["storage", "webNavigation", "tabs"]` and `"<all_urls>"` can slow reviews
 - To reduce friction:
@@ -38,7 +38,11 @@
   - Provide a clear reviewer note justifying each permission
   - Avoid sensitive language (e.g., "tracking") in manifest/comments
 
-#### Versioning
+### Versioning
 
 - Manual bump required on every update (`manifest.json`)
 - Stores reject uploads if version is unchanged
+
+### SEO
+
+- Make sure to do a deep talk with your favorit LLM before posting to app store - might be things with desc n SEO that is important
