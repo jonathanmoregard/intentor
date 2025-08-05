@@ -42,9 +42,50 @@ const SettingsTab = memo(
     const [showMoreOptions, setShowMoreOptions] = useState(false);
 
     const [blurredInputs, setBlurredInputs] = useState<Set<number>>(new Set());
-    const [loadedIntentionIndices, setLoadedIntentionIndices] = useState<
-      Set<number>
-    >(new Set());
+    const [loadedIndices, setLoadedIndices] = useState<Set<number>>(new Set());
+
+    // ============================================================================
+    // INTENTION CARD STATE MANAGEMENT
+    // ============================================================================
+    // Functions for managing the visual state of intention cards:
+    // - Error highlighting (blurred inputs)
+    // - Loaded state tracking (for initial vs new intentions)
+    // - Focus/blur state management
+
+    const markBlurred = (index: number) => {
+      setBlurredInputs(prev => new Set([...prev, index]));
+    };
+
+    const markFocused = (index: number) => {
+      setBlurredInputs(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(index);
+        return newSet;
+      });
+    };
+
+    const isBlurred = (index: number) => {
+      return blurredInputs.has(index);
+    };
+
+    const isLoaded = (index: number) => {
+      return loadedIndices.has(index);
+    };
+
+    const updateLoadedIndices = (
+      indices: Set<number> | ((prev: Set<number>) => Set<number>)
+    ) => {
+      if (typeof indices === 'function') {
+        setLoadedIndices(indices);
+      } else {
+        setLoadedIndices(indices);
+      }
+    };
+
+    // ============================================================================
+    // END INTENTION CARD STATE MANAGEMENT
+    // ============================================================================
+
     const urlInputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const moreOptionsRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +159,7 @@ const SettingsTab = memo(
             loadedIndices.add(index);
           }
         });
-        setLoadedIntentionIndices(loadedIndices);
+        updateLoadedIndices(loadedIndices);
 
         // Check if we should show examples based on initial load
         const nonEmptyIntentions = initialIntentions.filter(
@@ -231,7 +272,7 @@ const SettingsTab = memo(
       setIntentions(finalIntentions);
 
       // Update loaded indices after deletion
-      setLoadedIntentionIndices(prev => {
+      updateLoadedIndices(prev => {
         const newLoadedIndices = new Set<number>();
         prev.forEach(loadedIndex => {
           if (loadedIndex < index) {
@@ -440,7 +481,7 @@ const SettingsTab = memo(
                       !isEmpty(intention) &&
                       !canParseIntention(intention) &&
                       intention.url.trim() !== '' &&
-                      (loadedIntentionIndices.has(i) || blurredInputs.has(i))
+                      (isLoaded(i) || isBlurred(i))
                         ? 'error'
                         : ''
                     } ${isParsedIntention(intention) ? 'parsed' : ''}`}
@@ -452,11 +493,7 @@ const SettingsTab = memo(
                     }
                     onChange={e => {
                       // Reset blurred state when user starts typing
-                      setBlurredInputs(prev => {
-                        const newSet = new Set(prev);
-                        newSet.delete(i);
-                        return newSet;
-                      });
+                      markFocused(i);
 
                       const copy = [...intentions];
                       // Always treat as unparsed during editing
@@ -476,7 +513,7 @@ const SettingsTab = memo(
                     }}
                     onBlur={() => {
                       // Mark this input as blurred
-                      setBlurredInputs(prev => new Set([...prev, i]));
+                      markBlurred(i);
 
                       // Try to parse on blur
                       if (
