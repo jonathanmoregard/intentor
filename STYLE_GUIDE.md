@@ -15,6 +15,9 @@ Intender embraces a **mindful, non-coercive approach** to digital wellness. Rath
 ## Color Palette
 
 - **Error**: `#FE621D` - Orange-red for error states and incorrect input
+- **Error Background**:
+  - **Overlay**: `rgba(254, 98, 29, 0.05)` - Subtle red tint overlay on (off-)white backgrounds
+  - **Combined**: `rgba(255, 247, 244, 1);` - Pre-mixed warm tint for labels and small elements
 - **Green**: `#9E8E33` - Sage green for success states, active buttons, and correct input
 - **Black**: `#30332E` - Dark green-black for primary text, caret, and borders
 - **Gold**: `#FEE3A4` - Warm gold for particles, phrase background, and accents
