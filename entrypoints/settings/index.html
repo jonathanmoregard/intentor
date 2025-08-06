@@ -329,18 +329,38 @@
         height: 32px;
         font-size: 1.2rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.15s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: 'Inter', sans-serif;
         flex-shrink: 0;
         align-self: center;
+        line-height: 1;
+        box-shadow: 0 2px 6px rgba(254, 98, 29, 0.3);
       }
 
       .remove-btn:hover {
         background: #e55a1a;
         transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(254, 98, 29, 0.4);
+      }
+
+      .remove-btn-wrapper {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .remove-btn.shift-held {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+        background: #ff6b3d;
+        box-shadow: 0 4px 12px rgba(255, 107, 61, 0.5);
       }
 
       .actions {
@@ -358,7 +378,7 @@
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.15s ease;
         font-family: 'Inter', sans-serif;
         letter-spacing: 0.5px;
         background: linear-gradient(

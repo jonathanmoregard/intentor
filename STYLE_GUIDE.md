@@ -41,6 +41,18 @@ Intender embraces a **mindful, non-coercive approach** to digital wellness. Rath
 - **Hover state**: Brighten gradient by ~5%, scale to 102%, shadow becomes `0 4px 12px rgba(0, 0, 0, 0.4)`
 - **Transition**: 150ms ease for hover interactions
 
+### Round Symbol Buttons
+
+- **Background**: Theme-appropriate color (red for delete, green for add, etc.)
+- **Text**: Pure white
+- **Border**: None
+- **Border radius**: 50% (circular)
+- **Typography**: Inter, 1.2rem font size, line-height: 1
+- **Shadow**: 2px y-offset, 6px blur, 30% opacity of button color (`0 2px 6px rgba(button-color, 0.3)`)
+- **Hover state**: Darker version of button color, scale to 110%, enhanced shadow (`0 4px 12px rgba(button-color, 0.4)`)
+- **Shift-held state**: Brighter version of button color, larger size (36px), enhanced shadow (`0 4px 12px rgba(brighter-color, 0.5)`)
+- **Transition**: 150ms ease for all interactions
+
 ## Related Documentation
 
 For contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).

@@ -41,6 +41,7 @@ const SettingsTab = memo(
     const [loadedIntentionIds, setLoadedIntentionIds] = useState<Set<string>>(
       new Set()
     );
+    const [isShiftHeld, setIsShiftHeld] = useState(false);
 
     // ============================================================================
     // INTENTION CARD STATE MANAGEMENT
@@ -166,6 +167,28 @@ const SettingsTab = memo(
       }
     }, [intentions, debouncedSave]);
 
+    // Track shift key state
+    useEffect(() => {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Shift') {
+          setIsShiftHeld(true);
+        }
+      };
+
+      const handleKeyUp = (event: KeyboardEvent) => {
+        if (event.key === 'Shift') {
+          setIsShiftHeld(false);
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('keyup', handleKeyUp);
+      };
+    }, []);
+
     // Close more options dropdown when clicking outside
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -225,17 +248,17 @@ const SettingsTab = memo(
       });
     };
 
-    const remove = (index: number) => {
+    const remove = (index: number, skipConfirmation: boolean) => {
       const intention = intentions[index];
       const hasContent = !isEmpty(intention);
 
-      // Show confirmation dialog for intentions with content
-      if (hasContent) {
+      // Skip confirmation if shift is held or explicitly requested
+      if (hasContent && !skipConfirmation) {
         setDeleteConfirm({ show: true, index });
         return;
       }
 
-      // Delete empty intentions immediately
+      // Delete immediately
       performDelete(index);
     };
 
@@ -451,14 +474,20 @@ const SettingsTab = memo(
                 </div>
               </div>
 
-              <button
-                className='remove-btn'
-                onClick={() => remove(i)}
-                title='Remove intention'
-                tabIndex={-1}
-              >
-                ×
-              </button>
+              <div className='remove-btn-wrapper'>
+                <button
+                  className={`remove-btn ${isShiftHeld ? 'shift-held' : ''}`}
+                  onClick={() => remove(i, isShiftHeld)}
+                  title={
+                    isShiftHeld
+                      ? 'Remove intention (no confirmation)'
+                      : 'Remove intention (hold Shift to skip confirmation)'
+                  }
+                  tabIndex={-1}
+                >
+                  ×
+                </button>
+              </div>
             </div>
           ))}
         </div>
