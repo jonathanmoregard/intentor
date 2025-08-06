@@ -35,8 +35,12 @@ const SettingsTab = memo(
     const [showMoreOptions, setShowMoreOptions] = useState(false);
     const [fuzzyMatching, setFuzzyMatching] = useState(false);
 
-    const [blurredInputs, setBlurredInputs] = useState<Set<number>>(new Set());
-    const [loadedIndices, setLoadedIndices] = useState<Set<number>>(new Set());
+    const [blurredIntentionIds, setBlurredIntentionIds] = useState<Set<string>>(
+      new Set()
+    );
+    const [loadedIntentionIds, setLoadedIntentionIds] = useState<Set<string>>(
+      new Set()
+    );
 
     // ============================================================================
     // INTENTION CARD STATE MANAGEMENT
@@ -46,33 +50,33 @@ const SettingsTab = memo(
     // - Loaded state tracking (for initial vs new intentions)
     // - Focus/blur state management
 
-    const markBlurred = (index: number) => {
-      setBlurredInputs(prev => new Set([...prev, index]));
+    const markBlurred = (id: string) => {
+      setBlurredIntentionIds(prev => new Set([...prev, id]));
     };
 
-    const markFocused = (index: number) => {
-      setBlurredInputs(prev => {
+    const markFocused = (id: string) => {
+      setBlurredIntentionIds(prev => {
         const newSet = new Set(prev);
-        newSet.delete(index);
+        newSet.delete(id);
         return newSet;
       });
     };
 
-    const isBlurred = (index: number) => {
-      return blurredInputs.has(index);
+    const isBlurred = (id: string) => {
+      return blurredIntentionIds.has(id);
     };
 
-    const isLoaded = (index: number) => {
-      return loadedIndices.has(index);
+    const isLoaded = (id: string) => {
+      return loadedIntentionIds.has(id);
     };
 
-    const updateLoadedIndices = (
-      indices: Set<number> | ((prev: Set<number>) => Set<number>)
+    const updateLoadedIntentionIds = (
+      ids: Set<string> | ((prev: Set<string>) => Set<string>)
     ) => {
-      if (typeof indices === 'function') {
-        setLoadedIndices(indices);
+      if (typeof ids === 'function') {
+        setLoadedIntentionIds(ids);
       } else {
-        setLoadedIndices(indices);
+        setLoadedIntentionIds(ids);
       }
     };
 
@@ -126,13 +130,13 @@ const SettingsTab = memo(
         setFuzzyMatching(data.fuzzyMatching ?? true);
 
         // Track which intentions were loaded from storage (not newly created)
-        const loadedIndices = new Set<number>();
-        initialIntentions.forEach((intention, index) => {
+        const loadedIds = new Set<string>();
+        initialIntentions.forEach(intention => {
           if (!isEmpty(intention)) {
-            loadedIndices.add(index);
+            loadedIds.add(intention.id);
           }
         });
-        updateLoadedIndices(loadedIndices);
+        updateLoadedIntentionIds(loadedIds);
 
         // Check if we should show examples based on initial load
         const nonEmptyIntentions = initialIntentions.filter(
@@ -211,13 +215,14 @@ const SettingsTab = memo(
 
     const addExampleIntention = (example: { url: string; phrase: string }) => {
       setIntentions(prev => {
-        const newIntentions = [
-          makeRawIntention(example.url, example.phrase),
-          ...prev,
-        ];
+        const newIntention = makeRawIntention(example.url, example.phrase);
+        const newIntentions = [newIntention, ...prev];
+
+        // Mark the newly added example as solidified
+        updateLoadedIntentionIds(prev => new Set([...prev, newIntention.id]));
+
         return newIntentions;
       });
-      // Example intentions are not marked as loaded
     };
 
     const remove = (index: number) => {
@@ -241,21 +246,15 @@ const SettingsTab = memo(
         newIntentions.length > 0 ? newIntentions : [emptyRawIntention()];
       setIntentions(finalIntentions);
 
-      // Update loaded indices after deletion
-      updateLoadedIndices(prev => {
-        const newLoadedIndices = new Set<number>();
-        prev.forEach(loadedIndex => {
-          if (loadedIndex < index) {
-            // Keep indices before the deleted one unchanged
-            newLoadedIndices.add(loadedIndex);
-          } else if (loadedIndex > index) {
-            // Shift indices after the deleted one down by 1
-            newLoadedIndices.add(loadedIndex - 1);
-          }
-          // Skip the deleted index
+      // Update loaded IDs after deletion - remove the deleted intention's ID
+      const deletedIntention = intentions[index];
+      if (deletedIntention) {
+        updateLoadedIntentionIds(prev => {
+          const newLoadedIds = new Set(prev);
+          newLoadedIds.delete(deletedIntention.id);
+          return newLoadedIds;
         });
-        return newLoadedIndices;
-      });
+      }
     };
 
     const confirmDelete = () => {
@@ -403,13 +402,13 @@ const SettingsTab = memo(
                     }}
                     type='text'
                     className={`url-input ${
-                      (isBlurred(i) || isLoaded(i)) &&
+                      (isBlurred(intention.id) || isLoaded(intention.id)) &&
                       !isEmpty(intention) &&
                       !canParseIntention(intention)
                         ? 'error'
                         : ''
                     } ${
-                      (isBlurred(i) || isLoaded(i)) &&
+                      (isBlurred(intention.id) || isLoaded(intention.id)) &&
                       canParseIntention(intention)
                         ? 'parseable'
                         : ''
@@ -423,8 +422,8 @@ const SettingsTab = memo(
                       );
                       setIntentions(newIntentions);
                     }}
-                    onFocus={() => markFocused(i)}
-                    onBlur={() => markBlurred(i)}
+                    onFocus={() => markFocused(intention.id)}
+                    onBlur={() => markBlurred(intention.id)}
                     placeholder='Enter website URL (e.g., facebook.com)'
                   />
                   <label className='input-label'>Website URL</label>
