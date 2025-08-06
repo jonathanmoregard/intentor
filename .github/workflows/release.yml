@@ -52,7 +52,7 @@ jobs:
           files: .output/intender-chrome.zip
           generate_release_notes: true
           draft: false
-          prerelease: true
+          prerelease: false
           name: Release v${{ steps.version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
