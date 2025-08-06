@@ -212,11 +212,9 @@ const SettingsTab = memo(
     const addExampleIntention = (example: { url: string; phrase: string }) => {
       setIntentions(prev => {
         const newIntentions = [
-          ...prev,
           makeRawIntention(example.url, example.phrase),
+          ...prev,
         ];
-        // Focus the new intention's URL input
-        focusNewIntentionUrl(newIntentions.length - 1);
         return newIntentions;
       });
       // Example intentions are not marked as loaded
@@ -319,6 +317,13 @@ const SettingsTab = memo(
       },
     ];
 
+    // Filter out examples that match existing intentions
+    const filteredExampleIntentions = exampleIntentions.filter(example => {
+      return !intentions.some(
+        intention => !isEmpty(intention) && intention.url === example.url
+      );
+    });
+
     const exportIntentions = () => {
       const nonemptyIntentions = intentions.filter(
         intention => !isEmpty(intention)
@@ -389,7 +394,7 @@ const SettingsTab = memo(
 
         <div className='intentions-list'>
           {intentions.map((intention, i) => (
-            <div key={i} className='intention-item'>
+            <div key={intention.id || `new-${i}`} className='intention-item'>
               <div className='intention-inputs'>
                 <div className='input-group'>
                   <input
@@ -495,14 +500,14 @@ const SettingsTab = memo(
         </div>
 
         {/* 2. Example Intentions */}
-        {showExamples && (
+        {showExamples && filteredExampleIntentions.length > 0 && (
           <div className='examples-section'>
             <h3>Example Intentions</h3>
             <p className='examples-description'>
               Quick-add these examples to get started:
             </p>
             <div className='examples-list'>
-              {exampleIntentions.map((example, i) => (
+              {filteredExampleIntentions.map((example, i) => (
                 <div key={`example-${i}`} className='example-item'>
                   <div className='example-content'>
                     <div className='example-url'>{example.url}</div>
