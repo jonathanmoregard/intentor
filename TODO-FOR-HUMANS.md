@@ -33,6 +33,7 @@
 - Show # unparseable intention urls on the extension icon somehow
 - power users & a11y review
 - Add loading states, error handling
+- after period of inactivity on tab (3 hours?) require revalidation? If this doesn't clash with some arcane google rule
 
 ## Technical
 
