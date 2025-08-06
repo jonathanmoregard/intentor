@@ -363,6 +363,18 @@
         box-shadow: 0 4px 12px rgba(255, 107, 61, 0.5);
       }
 
+      .remove-btn.disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.5;
+      }
+
+      .remove-btn.disabled:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
       .actions {
         display: flex;
         gap: 1rem;

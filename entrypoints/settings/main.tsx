@@ -476,14 +476,21 @@ const SettingsTab = memo(
 
               <div className='remove-btn-wrapper'>
                 <button
-                  className={`remove-btn ${isShiftHeld ? 'shift-held' : ''}`}
+                  className={`remove-btn ${isShiftHeld ? 'shift-held' : ''} ${
+                    intentions.length === 1 && isEmpty(intention)
+                      ? 'disabled'
+                      : ''
+                  }`}
                   onClick={() => remove(i, isShiftHeld)}
                   title={
-                    isShiftHeld
-                      ? 'Remove intention (no confirmation)'
-                      : 'Remove intention (hold Shift to skip confirmation)'
+                    intentions.length === 1 && isEmpty(intention)
+                      ? 'Cannot delete the last intention'
+                      : isShiftHeld
+                        ? 'Remove intention (no confirmation)'
+                        : 'Remove intention (hold Shift to skip confirmation)'
                   }
                   tabIndex={-1}
+                  disabled={intentions.length === 1 && isEmpty(intention)}
                 >
                   ×
                 </button>
