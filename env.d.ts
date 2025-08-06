@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 interface ImportMetaEnv {
   readonly MODE: 'development' | 'production';
   // add more env vars here if needed

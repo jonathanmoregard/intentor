@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "types": ["webextension-polyfill", "jest"]
   },
-  "include": ["src", "entrypoints", "components", "tests"]
+  "include": ["src", "entrypoints", "components", "tests", "types"]
 }

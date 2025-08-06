@@ -1,3 +1,4 @@
+import { fuzzyMatch, fuzzyPartialMatch } from '../../components/fuzzy-matching';
 import { storage } from '../../components/storage';
 
 // Particles animation setup
@@ -123,12 +124,33 @@ const helperTextEl = document.getElementById('helper-text') as HTMLElement;
 
 let expectedPhrase = '';
 
-storage.get().then(({ intentions }) => {
+storage.get().then(({ intentions, fuzzyMatching = true }) => {
   // Use intention ID for precise lookup
   const match = intentions.find(r => r.id === intentionId);
   if (match) {
     expectedPhrase = match.phrase;
     phraseDisplayEl.textContent = expectedPhrase;
+
+    // Unified fuzzy matching configuration
+    const maxDistance = 2;
+
+    // Function to check if input is an acceptable partial prompt
+    const acceptablePartialPrompt = (input: string): boolean => {
+      if (!fuzzyMatching) {
+        return expectedPhrase.startsWith(input);
+      } else {
+        return fuzzyPartialMatch(input, expectedPhrase, maxDistance);
+      }
+    };
+
+    // Function to check if input is an acceptable complete prompt
+    const acceptableCompletePrompt = (input: string): boolean => {
+      if (!fuzzyMatching) {
+        return input === expectedPhrase;
+      } else {
+        return fuzzyMatch(input, expectedPhrase, maxDistance);
+      }
+    };
 
     // Set up input event listener for real-time validation
     inputEl.addEventListener('input', e => {
@@ -146,12 +168,12 @@ storage.get().then(({ intentions }) => {
         buttonEl.classList.remove('visible');
         buttonEl.classList.add('disabled');
         helperTextEl.classList.remove('visible');
-      } else if (expectedPhrase.startsWith(currentValue)) {
+      } else if (acceptablePartialPrompt(currentValue)) {
         // Partial match - green state (on the right track)
         phraseDisplayEl.className = 'phrase-display green';
         inputEl.className = 'phrase-input green';
         helperTextEl.classList.remove('visible');
-        if (currentValue === expectedPhrase) {
+        if (acceptableCompletePrompt(currentValue)) {
           buttonEl.classList.add('visible');
           buttonEl.classList.remove('disabled');
         } else {
@@ -172,7 +194,7 @@ storage.get().then(({ intentions }) => {
     inputEl.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault(); // Prevent newline from being added
-        if (inputEl.value === expectedPhrase) {
+        if (acceptableCompletePrompt(inputEl.value)) {
           window.location.href = target!;
         }
       }
@@ -180,7 +202,7 @@ storage.get().then(({ intentions }) => {
 
     // Set up button click handler
     buttonEl.onclick = () => {
-      if (inputEl.value === expectedPhrase) {
+      if (acceptableCompletePrompt(inputEl.value)) {
         // Add click animation
         const container = document.querySelector('.container') as HTMLElement;
         container.classList.add('clicking');

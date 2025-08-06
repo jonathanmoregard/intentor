@@ -33,6 +33,7 @@ const SettingsTab = memo(
     });
     const [showExamples, setShowExamples] = useState(false);
     const [showMoreOptions, setShowMoreOptions] = useState(false);
+    const [fuzzyMatching, setFuzzyMatching] = useState(false);
 
     const [blurredInputs, setBlurredInputs] = useState<Set<number>>(new Set());
     const [loadedIndices, setLoadedIndices] = useState<Set<number>>(new Set());
@@ -100,6 +101,10 @@ const SettingsTab = memo(
       []
     );
 
+    const saveFuzzyMatching = useCallback(async (enabled: boolean) => {
+      await storage.set({ fuzzyMatching: enabled });
+    }, []);
+
     // Debounced save function
     const debouncedSave = useCallback(
       debounce(async (intentionsToSave: RawIntention[]) => {
@@ -118,6 +123,7 @@ const SettingsTab = memo(
         const initialIntentions =
           data.intentions.length > 0 ? data.intentions : [emptyRawIntention()];
         setIntentions(initialIntentions);
+        setFuzzyMatching(data.fuzzyMatching ?? true);
 
         // Track which intentions were loaded from storage (not newly created)
         const loadedIndices = new Set<number>();
@@ -373,7 +379,8 @@ const SettingsTab = memo(
 
     return (
       <div className='settings-tab'>
-        <h2>Website Intentions</h2>
+        {/* 1. Intentions */}
+        <h2>Intentions</h2>
         <p className='description'>
           Set intentions for websites, to help yourself use them wisely. Later,
           when you navigate to these sites, you will get a chance to reaffirm
@@ -451,6 +458,7 @@ const SettingsTab = memo(
           ))}
         </div>
 
+        {/* 1b. Buttons */}
         <div className='actions'>
           <button
             className='add-btn'
@@ -485,7 +493,7 @@ const SettingsTab = memo(
           </div>
         </div>
 
-        {/* Example Intentions */}
+        {/* 2. Example Intentions */}
         {showExamples && (
           <div className='examples-section'>
             <h3>Example Intentions</h3>
@@ -511,6 +519,29 @@ const SettingsTab = memo(
             </div>
           </div>
         )}
+
+        {/* 3. Match Settings */}
+        <div className='general-settings'>
+          <h3>General Settings</h3>
+          <div className='setting-item'>
+            <div className='fuzzy-matching-setting'>
+              <label className='setting-label'>
+                <input
+                  type='checkbox'
+                  checked={fuzzyMatching}
+                  onChange={e => {
+                    const enabled = e.target.checked;
+                    setFuzzyMatching(enabled);
+                    saveFuzzyMatching(enabled);
+                  }}
+                />
+                <span className='setting-text'>
+                  Allow typos when entering intention
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
 
         {/* Delete Confirmation Dialog */}
         {deleteConfirm.show && (
