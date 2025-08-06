@@ -398,13 +398,14 @@ const SettingsTab = memo(
                     }}
                     type='text'
                     className={`url-input ${
-                      isBlurred(i) &&
+                      (isBlurred(i) || isLoaded(i)) &&
                       !isEmpty(intention) &&
                       !canParseIntention(intention)
                         ? 'error'
                         : ''
                     } ${
-                      isBlurred(i) && canParseIntention(intention)
+                      (isBlurred(i) || isLoaded(i)) &&
+                      canParseIntention(intention)
                         ? 'parseable'
                         : ''
                     }`}
