@@ -310,9 +310,8 @@ const SettingsTab = memo(
       ) {
         const intention = intentions[intentionIndex];
         const isLastIntention = intentionIndex === intentions.length - 1;
-        const intentionHasContent = !isEmpty(intention);
 
-        if (isLastIntention && intentionHasContent) {
+        if (isLastIntention) {
           e.preventDefault();
           setIntentions(prev => {
             const newIntentions = [...prev, emptyRawIntention()];
@@ -439,10 +438,10 @@ const SettingsTab = memo(
                     value={intention.url}
                     onChange={e => {
                       const newIntentions = [...intentions];
-                      newIntentions[i] = makeRawIntention(
-                        e.target.value,
-                        newIntentions[i].phrase
-                      );
+                      newIntentions[i] = {
+                        ...newIntentions[i],
+                        url: e.target.value,
+                      };
                       setIntentions(newIntentions);
                     }}
                     onFocus={() => markFocused(intention.id)}
