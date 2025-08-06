@@ -27,9 +27,8 @@ Intender embraces a **mindful, non-coercive approach** to digital wellness. Rath
 - **Primary Text**: `#30332E` - Main text, headings, labels
 - **Secondary Text**: `rgba(48, 51, 46, 0.8)` - Descriptions, helper text
 - **Tertiary Text**: `rgba(48, 51, 46, 0.7)` - Subtle text, placeholders
-- **Quaternary Text**: `rgba(48, 51, 46, 0.6)` - Very subtle text, disabled states
-- **Quinary Text**: `rgba(48, 51, 46, 0.5)` - Muted text, inactive elements
-- **Senary Text**: `rgba(48, 51, 46, 0.4)` - Extremely muted text
+- **Quaternary Text**: `rgba(48, 51, 46, 0.85)` - Very subtle text, disabled states
+- **Quinary Text**: `rgba(48, 51, 46, 0.85)` - Muted text, inactive elements
 - **White Text**: `rgba(255, 255, 255, 0.9)` - Text on colored backgrounds
 - **Error Text**: `#FE621D` - Error messages and validation text
 - **Success Text**: `#9E8E33` - Success messages and validation text
