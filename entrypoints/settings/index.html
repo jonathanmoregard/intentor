@@ -76,7 +76,7 @@
         padding: 1rem 1.5rem;
         background: none;
         border: none;
-        color: rgba(48, 51, 46, 0.6);
+        color: rgba(48, 51, 46, 0.85);
         font-size: 1rem;
         text-align: left;
         cursor: pointer;
@@ -262,15 +262,16 @@
 
       .input-label {
         position: absolute;
-        top: 0.75rem;
-        left: 0.75rem;
+        top: -0.5rem;
+        left: 0.5rem;
         font-family: 'Inter', sans-serif;
-        font-size: 0.85rem;
-        color: rgba(48, 51, 46, 0.6);
+        font-size: 0.75rem;
+        color: rgba(48, 51, 46, 0.85);
         transition: all 0.3s ease;
         pointer-events: none;
         background: rgba(255, 255, 255, 0.9);
         padding: 0 0.25rem;
+        font-weight: 400;
       }
 
       .input-label.floating {
@@ -314,14 +315,9 @@
       }
 
       .url-input:focus + .input-label,
-      .phrase-input:focus + .input-label,
-      .url-input:not(:placeholder-shown) + .input-label,
-      .phrase-input:not(:placeholder-shown) + .input-label {
-        top: -0.5rem;
-        left: 0.5rem;
-        font-size: 0.75rem;
+      .phrase-input:focus + .input-label {
         color: #9e8e33;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       .remove-btn {
@@ -333,18 +329,88 @@
         height: 32px;
         font-size: 1.2rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.15s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: 'Inter', sans-serif;
         flex-shrink: 0;
         align-self: center;
+        line-height: 1;
+        box-shadow: 0 2px 6px rgba(254, 98, 29, 0.3);
       }
 
       .remove-btn:hover {
         background: #e55a1a;
         transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(254, 98, 29, 0.4);
+      }
+
+      .remove-btn-wrapper {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .remove-btn.shift-held {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+        background: #ff6b3d;
+        box-shadow: 0 4px 12px rgba(255, 107, 61, 0.5);
+      }
+
+      .remove-btn.disabled {
+        background: rgba(128, 128, 128, 0.6);
+        color: white;
+        cursor: not-allowed;
+        box-shadow: 0 2px 6px rgba(128, 128, 128, 0.2);
+      }
+
+      .remove-btn.disabled:hover {
+        transform: none;
+        box-shadow: 0 2px 6px rgba(128, 128, 128, 0.2);
+      }
+
+      .valid-checkmark {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9e8e33;
+        font-size: 1.2rem;
+        font-weight: 600;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .url-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        transition: all 0.6s ease;
+      }
+
+      .error-text {
+        font-size: 0.8rem;
+        color: #fe621d;
+        font-weight: 500;
+        margin-top: 0.5rem;
+        margin-left: 0.5em;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.6s ease;
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      .error-text.show {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 2rem;
       }
 
       .actions {
@@ -362,7 +428,7 @@
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.15s ease;
         font-family: 'Inter', sans-serif;
         letter-spacing: 0.5px;
         background: linear-gradient(
@@ -774,30 +840,24 @@
         box-shadow: 0 0 0 2px rgba(254, 98, 29, 0.2);
       }
 
+      /* Error styling for labels */
+      .url-input.error + .input-label {
+        color: #fe621d;
+        background: rgba(255, 247, 244, 1);
+        border-radius: 3px;
+        padding: 0 0.25rem;
+      }
+
       /* Success styling for parsed URLs */
       .url-input.parseable {
-        background: #9e8e33;
-        color: white;
-        border: 3px solid #8a7d2e;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        border-color: #9e8e33;
+        background-color: rgba(158, 142, 51, 0.05);
+        padding-left: 35px;
       }
 
       .url-input.parseable:focus {
-        background: #9e8e33;
-        color: white;
-        border: 3px solid #8a7d2e;
-        box-shadow:
-          0 0 0 1px rgba(255, 255, 255, 0.2) inset,
-          0 0 0 2px rgba(158, 142, 51, 0.2);
-      }
-
-      .url-input.parseable::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      /* Hide label for parseable inputs */
-      .url-input.parseable + .input-label {
-        display: none;
+        border-color: #9e8e33;
+        box-shadow: 0 0 0 2px rgba(158, 142, 51, 0.2);
       }
 
       /* Warning Dialog for Unparseable Intentions */

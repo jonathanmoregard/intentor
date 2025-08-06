@@ -4,7 +4,6 @@
 
 - Check icon, should there be diff sizes as in the sample ext?
 - Make a "CD" - build artefact to stable link AND a install guide for testers with the link
-- Finish fuzzy match logic
 - clean up design of settings page (https://chatgpt.com/share/68930b96-3600-8003-b0ca-bf15351deafc)
   - where do added example intentions go/dissapear when adding?
   - what is a clearer layout order that screams purpose?
@@ -34,6 +33,7 @@
 - Show # unparseable intention urls on the extension icon somehow
 - power users & a11y review
 - Add loading states, error handling
+- after period of inactivity on tab (3 hours?) require revalidation? If this doesn't clash with some arcane google rule
 
 ## Technical
 

@@ -298,7 +298,7 @@
       }
 
       .phrase-input::placeholder {
-        color: rgba(48, 51, 46, 0.5);
+        color: rgba(48, 51, 46, 0.85);
       }
 
       .phrase-input:focus {
@@ -332,12 +332,12 @@
           rgba(158, 142, 51, 0.6) 100%
         );
         color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(122, 109, 51, 0.5);
+        border: 1px solid rgba(158, 142, 51, 0.4);
         padding: 16px 32px;
         font-size: 1rem;
         border-radius: 12px;
         cursor: pointer;
-        transition: all 0.8s ease;
+        transition: all 1.6s ease;
         width: auto;
         min-width: 160px;
         font-family: 'Inter', sans-serif;
@@ -345,20 +345,23 @@
         letter-spacing: 0.5px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         opacity: 0.3;
-        pointer-events: none;
         backdrop-filter: blur(10px);
         position: relative;
         overflow: hidden;
       }
 
-      .enter-btn.disabled {
+      .enter-btn:not(:disabled) {
+        opacity: 1;
+      }
+
+      .enter-btn:disabled {
         background: linear-gradient(
           135deg,
-          rgba(128, 128, 128, 0.4) 0%,
-          rgba(128, 128, 128, 0.3) 100%
+          rgba(128, 128, 128, 0.6) 0%,
+          rgba(128, 128, 128, 0.4) 100%
         );
-        color: rgba(48, 51, 46, 0.4);
-        border: 1px solid rgba(128, 128, 128, 0.3);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(128, 128, 128, 0.4);
         cursor: not-allowed;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
@@ -377,30 +380,6 @@
       .enter-btn:active {
         transform: scale(0.98);
         transition: all 0.1s ease;
-      }
-
-      .enter-btn.visible {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .enter-btn.visible:hover {
-        background: linear-gradient(
-          135deg,
-          rgba(158, 142, 51, 0.85) 0%,
-          rgba(158, 142, 51, 0.65) 100%
-        );
-        transform: scale(1.02);
-        transition: all 0.15s ease;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      }
-
-      .enter-btn:disabled {
-        background-color: rgba(0, 0, 0, 0.05);
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-        border-color: rgba(0, 0, 0, 0.1);
       }
 
       .helper-text {
@@ -469,7 +448,7 @@
         <div id="helper-text" class="helper-text">
           That doesn't match your intention. Try again.
         </div>
-        <button id="go" class="enter-btn">Continue</button>
+        <button id="go" class="enter-btn" disabled>Continue</button>
       </div>
     </div>
     <div class="intender-logo">Intender</div>

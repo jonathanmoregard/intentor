@@ -165,8 +165,7 @@ storage.get().then(({ intentions, fuzzyMatching = true }) => {
         // Empty input - grey state
         phraseDisplayEl.className = 'phrase-display grey';
         inputEl.className = 'phrase-input grey';
-        buttonEl.classList.remove('visible');
-        buttonEl.classList.add('disabled');
+        buttonEl.disabled = true;
         helperTextEl.classList.remove('visible');
       } else if (acceptablePartialPrompt(currentValue)) {
         // Partial match - green state (on the right track)
@@ -174,18 +173,15 @@ storage.get().then(({ intentions, fuzzyMatching = true }) => {
         inputEl.className = 'phrase-input green';
         helperTextEl.classList.remove('visible');
         if (acceptableCompletePrompt(currentValue)) {
-          buttonEl.classList.add('visible');
-          buttonEl.classList.remove('disabled');
+          buttonEl.disabled = false;
         } else {
-          buttonEl.classList.remove('visible');
-          buttonEl.classList.add('disabled');
+          buttonEl.disabled = true;
         }
       } else {
         // Incorrect phrase - show red state immediately
         phraseDisplayEl.className = 'phrase-display red';
         inputEl.className = 'phrase-input red';
-        buttonEl.classList.remove('visible');
-        buttonEl.classList.add('disabled');
+        buttonEl.disabled = true;
         helperTextEl.classList.add('visible');
       }
     });
@@ -202,7 +198,7 @@ storage.get().then(({ intentions, fuzzyMatching = true }) => {
 
     // Set up button click handler
     buttonEl.onclick = () => {
-      if (acceptableCompletePrompt(inputEl.value)) {
+      if (!buttonEl.disabled && acceptableCompletePrompt(inputEl.value)) {
         // Add click animation
         const container = document.querySelector('.container') as HTMLElement;
         container.classList.add('clicking');
@@ -220,6 +216,6 @@ storage.get().then(({ intentions, fuzzyMatching = true }) => {
     phraseDisplayEl.textContent = 'No phrase found for this URL';
     phraseDisplayEl.className = 'phrase-display red';
     inputEl.disabled = true;
-    buttonEl.classList.remove('visible');
+    buttonEl.disabled = true;
   }
 });
