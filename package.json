@@ -19,7 +19,10 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "test:url-matching": "vitest url-matching.test.ts"
+    "test:url-matching": "vitest url-matching.test.ts",
+    "version:check": "node scripts/version-check.js",
+    "version:bump": "node scripts/version-bump.js",
+    "pr:create": "node scripts/create-pr.js"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
