@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check version before push
+if ! npm run version:check; then
+  echo ""
+  echo "📖 See cursor_instructions/PUSH_GUIDE.md for help fixing version issues"
+  exit 1
+fi

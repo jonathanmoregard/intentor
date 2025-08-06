@@ -2,7 +2,7 @@
 
 ## Pre beta test
 
-- Make a "CD" - build artefact to stable link AND a install guide for testers with the link
+- ✅ Make a "CD" - build artefact to stable link AND a install guide for testers with the link
 
 ## Maybe pre beta
 

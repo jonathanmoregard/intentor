@@ -58,4 +58,13 @@ _Built with [Cursor](https://cursor.sh) - the AI-first code editor._
 
 ## Getting Started
 
+### For Testers
+
+Download and install the extension for testing:
+
+- **[Download Latest Version](https://github.com/jonathanmoregard/intender/releases/latest/download/intender-chrome.zip)**
+- **[Installation Guide](./INSTALL_GUIDE.md)** - Step-by-step instructions
+
+### For Developers
+
 For development setup and technical details, see our [Contributing Guide](./CONTRIBUTING.md).
