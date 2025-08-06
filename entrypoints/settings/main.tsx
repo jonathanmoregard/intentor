@@ -417,38 +417,52 @@ const SettingsTab = memo(
           {intentions.map((intention, i) => (
             <div key={intention.id || `new-${i}`} className='intention-item'>
               <div className='intention-inputs'>
-                <div className='input-group'>
-                  <input
-                    ref={el => {
-                      urlInputRefs.current[i] = el;
-                    }}
-                    type='text'
-                    className={`url-input ${
-                      (isBlurred(intention.id) || isLoaded(intention.id)) &&
-                      !isEmpty(intention) &&
-                      !canParseIntention(intention)
-                        ? 'error'
-                        : ''
-                    } ${
-                      (isBlurred(intention.id) || isLoaded(intention.id)) &&
-                      canParseIntention(intention)
-                        ? 'parseable'
-                        : ''
-                    }`}
-                    value={intention.url}
-                    onChange={e => {
-                      const newIntentions = [...intentions];
-                      newIntentions[i] = {
-                        ...newIntentions[i],
-                        url: e.target.value,
-                      };
-                      setIntentions(newIntentions);
-                    }}
-                    onFocus={() => markFocused(intention.id)}
-                    onBlur={() => markBlurred(intention.id)}
-                    placeholder='Enter website URL (e.g., facebook.com)'
-                  />
-                  <label className='input-label'>Website URL</label>
+                <div className='url-section'>
+                  <div className='input-group'>
+                    <input
+                      ref={el => {
+                        urlInputRefs.current[i] = el;
+                      }}
+                      type='text'
+                      className={`url-input ${
+                        (isBlurred(intention.id) || isLoaded(intention.id)) &&
+                        !isEmpty(intention) &&
+                        !canParseIntention(intention)
+                          ? 'error'
+                          : ''
+                      } ${
+                        (isBlurred(intention.id) || isLoaded(intention.id)) &&
+                        canParseIntention(intention)
+                          ? 'parseable'
+                          : ''
+                      }`}
+                      value={intention.url}
+                      onChange={e => {
+                        const newIntentions = [...intentions];
+                        newIntentions[i] = {
+                          ...newIntentions[i],
+                          url: e.target.value,
+                        };
+                        setIntentions(newIntentions);
+                      }}
+                      onFocus={() => markFocused(intention.id)}
+                      onBlur={() => markBlurred(intention.id)}
+                      placeholder='Enter website URL (e.g., facebook.com)'
+                    />
+                    <label className='input-label'>Website URL</label>
+                    {(isBlurred(intention.id) || isLoaded(intention.id)) &&
+                      canParseIntention(intention) && (
+                        <span className='valid-checkmark'>✓</span>
+                      )}
+                  </div>
+
+                  {(isBlurred(intention.id) || isLoaded(intention.id)) &&
+                    !isEmpty(intention) &&
+                    !canParseIntention(intention) && (
+                      <div className='error-text show'>
+                        Please enter a full domain, e.g. example.com
+                      </div>
+                    )}
                 </div>
 
                 <div className='input-group'>

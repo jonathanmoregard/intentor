@@ -375,6 +375,44 @@
         box-shadow: none;
       }
 
+      .valid-checkmark {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9e8e33;
+        font-size: 1.2rem;
+        font-weight: 600;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .url-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        transition: all 0.6s ease;
+      }
+
+      .error-text {
+        font-size: 0.8rem;
+        color: #fe621d;
+        font-weight: 500;
+        margin-top: 0.5rem;
+        margin-left: 0.5em;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.6s ease;
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      .error-text.show {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 2rem;
+      }
+
       .actions {
         display: flex;
         gap: 1rem;
@@ -812,28 +850,14 @@
 
       /* Success styling for parsed URLs */
       .url-input.parseable {
-        background: #9e8e33;
-        color: white;
-        border: 3px solid #8a7d2e;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        border-color: #9e8e33;
+        background-color: rgba(158, 142, 51, 0.05);
+        padding-left: 35px;
       }
 
       .url-input.parseable:focus {
-        background: #9e8e33;
-        color: white;
-        border: 3px solid #8a7d2e;
-        box-shadow:
-          0 0 0 1px rgba(255, 255, 255, 0.2) inset,
-          0 0 0 2px rgba(158, 142, 51, 0.2);
-      }
-
-      .url-input.parseable::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      /* Hide label for parseable inputs */
-      .url-input.parseable + .input-label {
-        display: none;
+        border-color: #9e8e33;
+        box-shadow: 0 0 0 2px rgba(158, 142, 51, 0.2);
       }
 
       /* Warning Dialog for Unparseable Intentions */
