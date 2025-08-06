@@ -515,6 +515,7 @@ const SettingsTab = memo(
                   </div>
                   <button
                     className='quick-add-btn'
+                    onMouseDown={e => e.preventDefault()}
                     onClick={() => addExampleIntention(example)}
                     title={`Add ${example.url} intention`}
                   >
