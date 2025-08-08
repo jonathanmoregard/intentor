@@ -29,3 +29,6 @@ web-ext.config.ts
 .DS_Store
 *.swp
 *.swo
+
+test-results/
+.test-results/
