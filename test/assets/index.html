@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Intender E2E Audio Fixture</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Ubuntu,
+          Cantarell,
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans',
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol';
+        margin: 2rem;
+        max-width: 720px;
+      }
+      .wrap {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+      }
+      .note {
+        color: #555;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Audio Fixture</h1>
+    <p>
+      Local, first-party audio for E2E testing. No third-party resources, no
+      cookies, no storage.
+    </p>
+    <div class="wrap">
+      <button id="play" data-testid="fixture-play">Play</button>
+      <audio id="player" src="sound.mp3" preload="auto"></audio>
+    </div>
+    <p class="note">
+      If playback doesn’t start, ensure the browser allows audio and the file
+      <code>sound.mp3</code> is present next to this HTML page.
+    </p>
+    <script>
+      const btn = document.getElementById('play');
+      const player = document.getElementById('player');
+      btn.addEventListener('click', async () => {
+        try {
+          await player.play();
+          btn.textContent = 'Playing';
+          btn.disabled = true;
+        } catch (e) {
+          console.log('play failed', e);
+        }
+      });
+    </script>
+  </body>
+</html>
